@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="./media/logo_small.webp"/>
+    <img src="./media/FrenchPOC-LOGOS-General-EXE-1_FP-Picto Fd Bleu.png"/>
     <h1>🔧 Hardware Spec Kit</h1>
     <h3><em>Build high-quality hardware products faster.</em></h3>
 </div>
