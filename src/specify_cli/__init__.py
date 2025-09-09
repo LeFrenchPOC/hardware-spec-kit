@@ -418,7 +418,7 @@ def download_template_from_github(ai_assistant: str, download_dir: Path, *, verb
             console.print(f"[yellow]Available assets:[/yellow]")
             for asset in release_data.get("assets", []):
                 console.print(f"  - {asset['name']}")
-        raise typer.Exit(1)
+    raise RuntimeError("no-template-asset-found")
     
     # Use the first matching asset
     asset = matching_assets[0]
@@ -483,6 +483,145 @@ def download_template_from_github(ai_assistant: str, download_dir: Path, *, verb
     return zip_path, metadata
 
 
+def _try_get_repo_root_near_module() -> Path | None:
+    """Attempt to locate the repo root when running from source checkout.
+    Returns the path if found (contains templates/ or docs/), else None.
+    """
+    try:
+        here = Path(__file__).resolve()
+        # Walk up a few levels to find repo markers
+        for p in [here.parent, here.parent.parent, here.parent.parent.parent]:
+            if not p:
+                continue
+            if (p / "templates").exists() or (p / "docs").exists():
+                return p
+    except Exception:
+        return None
+    return None
+
+
+def _write_text_file(dest: Path, content: str):
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(content, encoding="utf-8")
+
+
+def _copy_if_exists(src: Path, dest: Path) -> bool:
+    try:
+        if src.exists():
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            if src.is_dir():
+                # Merge copy contents
+                for sub in src.rglob("*"):
+                    if sub.is_file():
+                        rel = sub.relative_to(src)
+                        out = dest / rel
+                        out.parent.mkdir(parents=True, exist_ok=True)
+                        shutil.copy2(sub, out)
+            else:
+                shutil.copy2(src, dest)
+            return True
+    except Exception:
+        return False
+    return False
+
+
+def _create_local_template(project_path: Path, ai_assistant: str, is_current_dir: bool, *, tracker: StepTracker | None = None):
+    """Create a minimal hardware project template directly from local resources.
+    Tries to copy from the repo's templates/docs when available; otherwise writes defaults.
+    """
+    if tracker:
+        tracker.add("local-template", "Use local template")
+        tracker.start("local-template")
+
+    repo_root = _try_get_repo_root_near_module()
+
+    # Core files
+    _write_text_file(project_path / "README.md", f"""
+# {project_path.name}
+
+Scaffolded with Hardware Spec Kit (local template fallback).
+
+Next steps:
+- Define your product vision and constraints in CONSTITUTION.md
+- Use templates/commands to drive spec, plan, and tasks
+- Keep docs/ updated as your hardware evolves
+""".strip() + "\n")
+
+    _write_text_file(project_path / "CONSTITUTION.md", """
+# Constitution
+
+State the design principles, constraints, and success criteria for this hardware project.
+Include mechanical, electrical, embedded, manufacturing, and testing considerations.
+""".strip() + "\n")
+
+    _write_text_file(project_path / ".gitignore", """
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+env/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
+""".strip() + "\n")
+
+    # docs
+    if repo_root and _copy_if_exists(repo_root / "docs", project_path / "docs"):
+        pass
+    else:
+        _write_text_file(project_path / "docs/index.md", """
+# Project Docs
+
+Use this space to document assembly, wiring, firmware flashing, and testing procedures.
+""".strip() + "\n")
+
+    # templates (commands + base templates)
+    if repo_root:
+        _copy_if_exists(repo_root / "templates/commands", project_path / "templates/commands")
+        _copy_if_exists(repo_root / "templates/spec-template.md", project_path / "templates/spec-template.md")
+        _copy_if_exists(repo_root / "templates/plan-template.md", project_path / "templates/plan-template.md")
+        _copy_if_exists(repo_root / "templates/tasks-template.md", project_path / "templates/tasks-template.md")
+
+    # Default commands if none were copied
+    commands_dir = project_path / "templates/commands"
+    if not commands_dir.exists():
+        _write_text_file(commands_dir / "specify.md", """
+title: /specify
+
+Use this command to generate or update a hardware product specification.
+""".strip() + "\n")
+        _write_text_file(commands_dir / "plan.md", """
+title: /plan
+
+Create an implementation plan for your hardware, covering mechanics, electronics, firmware, and manufacturing.
+""".strip() + "\n")
+        _write_text_file(commands_dir / "tasks.md", """
+title: /tasks
+
+Break the plan into actionable engineering tasks across disciplines.
+""".strip() + "\n")
+
+    # Memory/constitution helpers
+    if repo_root:
+        _copy_if_exists(repo_root / "memory", project_path / "memory")
+
+    # Guidance doc
+    if repo_root and (repo_root / "spec-driven.md").exists():
+        _copy_if_exists(repo_root / "spec-driven.md", project_path / "spec-driven.md")
+    else:
+        _write_text_file(project_path / "spec-driven.md", """
+# Spec-Driven Development
+
+Capture specs first, then plans and tasks. Keep constraints visible and iterate with discipline.
+""".strip() + "\n")
+
+    if tracker:
+        tracker.complete("local-template", "created")
+
+
 def download_and_extract_template(project_path: Path, ai_assistant: str, is_current_dir: bool = False, *, verbose: bool = True, tracker: StepTracker | None = None) -> Path:
     """Download the latest release and extract it to create a new project.
     Returns project_path. Uses tracker if provided (with keys: fetch, download, extract, cleanup)
@@ -490,6 +629,7 @@ def download_and_extract_template(project_path: Path, ai_assistant: str, is_curr
     current_dir = Path.cwd()
     
     # Step: fetch + download combined
+    zip_path: Path | None = None
     if tracker:
         tracker.start("fetch", "contacting GitHub API")
     try:
@@ -504,12 +644,28 @@ def download_and_extract_template(project_path: Path, ai_assistant: str, is_curr
             tracker.add("download", "Download template")
             tracker.complete("download", meta['filename'])  # already downloaded inside helper
     except Exception as e:
+        # Fallback to local template generation if release asset is not available
         if tracker:
-            tracker.error("fetch", str(e))
+            tracker.error("fetch", "no release asset; using local template")
         else:
             if verbose:
-                console.print(f"[red]Error downloading template:[/red] {e}")
-        raise
+                console.print("[yellow]No release template found. Falling back to local template.[/yellow]")
+        # Create target directory if needed before writing files
+        if not is_current_dir:
+            project_path.mkdir(parents=True, exist_ok=True)
+        _create_local_template(project_path, ai_assistant, is_current_dir, tracker=tracker)
+        # Skip zip extract path entirely
+        if tracker:
+            tracker.skip("extract", "local template used")
+            tracker.add("extracted-summary", "Extraction summary")
+            try:
+                top_items = list(project_path.iterdir())
+                tracker.complete("extracted-summary", f"{len(top_items)} top-level items")
+            except Exception:
+                tracker.complete("extracted-summary", "created")
+            tracker.add("cleanup", "Cleanup")
+            tracker.complete("cleanup")
+        return project_path
     
     if tracker:
         tracker.add("extract", "Extract template")
@@ -624,13 +780,16 @@ def download_and_extract_template(project_path: Path, ai_assistant: str, is_curr
     finally:
         if tracker:
             tracker.add("cleanup", "Remove temporary archive")
-        # Clean up downloaded ZIP file
-        if zip_path.exists():
-            zip_path.unlink()
-            if tracker:
-                tracker.complete("cleanup")
-            elif verbose:
-                console.print(f"Cleaned up: {zip_path.name}")
+        # Clean up downloaded ZIP file (if any)
+        try:
+            if zip_path and zip_path.exists():
+                zip_path.unlink()
+                if tracker:
+                    tracker.complete("cleanup")
+                elif verbose:
+                    console.print(f"Cleaned up: {zip_path.name}")
+        except Exception:
+            pass
     
     return project_path
 
