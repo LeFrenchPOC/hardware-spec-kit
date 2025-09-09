@@ -1,22 +1,22 @@
-# Implementation Plan: [FEATURE]
+# Hardware Implementation Plan: [FEATURE]
 
 **Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
-**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
+**Input**: Hardware feature specification from `/specs/[###-feature-name]/spec.md`
 
 ## Execution Flow (/plan command scope)
 ```
-1. Load feature spec from Input path
+1. Load hardware feature spec from Input path
    → If not found: ERROR "No feature spec at {path}"
 2. Fill Technical Context (scan for NEEDS CLARIFICATION)
-   → Detect Project Type from context (web=frontend+backend, mobile=app+api)
-   → Set Structure Decision based on project type
+   → Detect Hardware Type from context (iot=mcu+sensors, robotics=actuators+control, measurement=sensors+display)
+   → Set Design Structure Decision based on hardware type
 3. Evaluate Constitution Check section below
    → If violations exist: Document in Complexity Tracking
    → If no justification possible: ERROR "Simplify approach first"
    → Update Progress Tracking: Initial Constitution Check
 4. Execute Phase 0 → research.md
    → If NEEDS CLARIFICATION remain: ERROR "Resolve unknowns"
-5. Execute Phase 1 → contracts, data-model.md, quickstart.md, agent-specific template file (e.g., `CLAUDE.md` for Claude Code, `.github/copilot-instructions.md` for GitHub Copilot, or `GEMINI.md` for Gemini CLI).
+5. Execute Phase 1 → hardware specs, mechanical/electrical/embedded designs, quickstart.md, agent-specific template file
 6. Re-evaluate Constitution Check section
    → If new violations: Refactor design, return to Phase 1
    → Update Progress Tracking: Post-Design Constitution Check
@@ -26,177 +26,211 @@
 
 **IMPORTANT**: The /plan command STOPS at step 7. Phases 2-4 are executed by other commands:
 - Phase 2: /tasks command creates tasks.md
-- Phase 3-4: Implementation execution (manual or via tools)
+- Phase 3-4: Hardware implementation execution (design tools, prototyping, testing)
 
 ## Summary
-[Extract from feature spec: primary requirement + technical approach from research]
+[Extract from hardware feature spec: primary requirement + technical approach from research]
 
 ## Technical Context
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [single/web/mobile - determines source structure]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Hardware Platform**: [e.g., ESP32-S3, Raspberry Pi 4, STM32F4 or NEEDS CLARIFICATION]  
+**Primary Components**: [e.g., DHT22 sensors, OLED display, LoRa module or NEEDS CLARIFICATION]  
+**Power System**: [e.g., 18650 Li-ion with solar, USB-C PD, coin cell or NEEDS CLARIFICATION]  
+**Mechanical Design**: [e.g., 3D printed PETG enclosure, aluminum extrusion, injection molded ABS or NEEDS CLARIFICATION]  
+**Communication**: [e.g., WiFi, LoRaWAN, Bluetooth LE, CAN bus or NEEDS CLARIFICATION]
+**Manufacturing Process**: [e.g., prototype/small batch, injection molding, PCB assembly house or NEEDS CLARIFICATION]  
+**Hardware Type**: [iot/robotics/measurement/control - determines design structure]  
+**Performance Goals**: [domain-specific, e.g., 1-year battery life, <100ms response, ±0.1% accuracy or NEEDS CLARIFICATION]  
+**Environmental Requirements**: [e.g., IP65, -20°C to +60°C, automotive EMC or NEEDS CLARIFICATION]  
+**Regulatory Compliance**: [e.g., FCC Part 15, CE marking, UL listed or NEEDS CLARIFICATION]
 
 ## Constitution Check
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-**Simplicity**:
-- Projects: [#] (max 3 - e.g., api, cli, tests)
-- Using framework directly? (no wrapper classes)
-- Single data model? (no DTOs unless serialization differs)
-- Avoiding patterns? (no Repository/UoW without proven need)
+**Design Modularity**:
+- Subsystems: [#] (max 3 - e.g., mechanical, electrical, embedded)
+- Using standard interfaces? (no custom connectors without justification)
+- Modular mechanical design? (standardized mounting, separable assemblies)
+- Modular electrical design? (standard connectors, test points, modular PCBs)
 
-**Architecture**:
-- EVERY feature as library? (no direct app code)
-- Libraries listed: [name + purpose for each]
-- CLI per library: [commands with --help/--version/--format]
-- Library docs: llms.txt format planned?
+**Hardware Architecture**:
+- EVERY subsystem as module? (no monolithic designs)
+- Modules listed: [name + function for each]
+- Test interfaces per module: [connector/port specifications]
+- Documentation format: standardized datasheets planned?
 
-**Testing (NON-NEGOTIABLE)**:
-- RED-GREEN-Refactor cycle enforced? (test MUST fail first)
-- Git commits show tests before implementation?
-- Order: Contract→Integration→E2E→Unit strictly followed?
-- Real dependencies used? (actual DBs, not mocks)
-- Integration tests for: new libraries, contract changes, shared schemas?
-- FORBIDDEN: Implementation before test, skipping RED phase
+**Design-for-Test (NON-NEGOTIABLE)**:
+- Test-First-Design enforced? (test procedures MUST be defined before implementation)
+- Design validation plan exists? (mechanical stress, electrical validation, embedded testing)
+- Order: Requirements→Test Plan→Design→Validation strictly followed?
+- Real environment testing? (actual sensors, loads, communication)
+- Integration tests for: mechanical interfaces, electrical connections, embedded communication?
+- FORBIDDEN: Implementation before test plan, skipping validation phase
 
-**Observability**:
-- Structured logging included?
-- Frontend logs → backend? (unified stream)
-- Error context sufficient?
+**Design Documentation**:
+- Design files version controlled?
+- Manufacturing documentation included?
+- Assembly procedures documented?
+- Design rationale captured?
 
-**Versioning**:
-- Version number assigned? (MAJOR.MINOR.BUILD)
-- BUILD increments on every change?
-- Breaking changes handled? (parallel tests, migration plan)
+**Design Constraints**:
+- Manufacturing requirements specified?
+- Component sourcing plan exists?
+- Cost targets established?
+- Regulatory compliance addressed?
 
-## Project Structure
+## Hardware Design Structure
 
 ### Documentation (this feature)
 ```
 specs/[###-feature]/
-├── plan.md              # This file (/plan command output)
-├── research.md          # Phase 0 output (/plan command)
-├── data-model.md        # Phase 1 output (/plan command)
-├── quickstart.md        # Phase 1 output (/plan command)
-├── contracts/           # Phase 1 output (/plan command)
-└── tasks.md             # Phase 2 output (/tasks command - NOT created by /plan)
+├── plan.md                    # This file (/plan command output)
+├── research.md                # Phase 0 output (/plan command)
+├── data-model.md              # Phase 1 output (/plan command) - sensor data, communication protocols
+├── quickstart.md              # Phase 1 output (/plan command)
+├── hardware/                  # Phase 1 output (/plan command)
+│   ├── mechanical-spec.md     # Enclosure, mounting, materials
+│   ├── electrical-spec.md     # Schematic, PCB, power design
+│   └── embedded-spec.md       # Firmware, communication, interfaces
+└── tasks.md                   # Phase 2 output (/tasks command - NOT created by /plan)
 ```
 
-### Source Code (repository root)
+### Design Files (repository root)
 ```
-# Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
+# Option 1: IoT Device (DEFAULT)
+hardware/
+├── mechanical/
+│   ├── enclosures/           # Fusion360 files (.f3d)
+│   ├── assemblies/           # Assembly drawings
+│   └── manufacturing/        # STL, STEP files for production
+├── electrical/
+│   ├── schematics/          # KiCAD project files (.kicad_pro, .kicad_sch)
+│   ├── pcb/                 # PCB layouts (.kicad_pcb)
+│   └── gerbers/             # Manufacturing files
+└── embedded/
+    ├── firmware/            # MCU/SBC code (Arduino, ESP-IDF, etc.)
+    ├── libraries/           # Hardware abstraction layers
+    └── tests/               # Unit and integration tests
 
-tests/
-├── contract/
-├── integration/
-└── unit/
+docs/
+├── datasheets/              # Component specifications
+├── assembly/                # Assembly instructions
+└── testing/                 # Test procedures and results
 
-# Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
+# Option 2: Robotics System (when "actuators" + "control" detected)
+hardware/
+├── mechanical/
+│   ├── chassis/             # Main structure design
+│   ├── joints/              # Actuator mounts and joints
+│   └── end-effectors/       # Tools, grippers, sensors
+├── electrical/
+│   ├── power/               # Power distribution, battery management
+│   ├── control/             # Motor drivers, sensor interfaces
+│   └── communication/       # CAN bus, industrial protocols
+└── embedded/
+    ├── control-system/      # Real-time control firmware
+    ├── safety/              # Safety interlocks and monitoring
+    └── interface/           # Human-machine interface
 
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
-
-# Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
-
-ios/ or android/
-└── [platform-specific structure]
+# Option 3: Measurement System (when "sensors" + "data logging" detected)
+hardware/
+├── mechanical/
+│   ├── sensor-mounts/       # Precision mounting systems
+│   ├── calibration/         # Calibration fixtures
+│   └── shielding/           # EMI/RFI protection
+├── electrical/
+│   ├── analog-frontend/     # Signal conditioning
+│   ├── data-acquisition/    # ADC, timing, synchronization
+│   └── interfaces/          # Communication, display
+└── embedded/
+    ├── acquisition/         # Data collection firmware
+    ├── processing/          # Signal processing algorithms
+    └── calibration/         # Calibration routines
 ```
 
-**Structure Decision**: [DEFAULT to Option 1 unless Technical Context indicates web/mobile app]
+**Design Structure Decision**: [DEFAULT to Option 1 unless Technical Context indicates robotics/measurement system]
 
 ## Phase 0: Outline & Research
 1. **Extract unknowns from Technical Context** above:
    - For each NEEDS CLARIFICATION → research task
-   - For each dependency → best practices task
-   - For each integration → patterns task
+   - For each hardware component → specifications task
+   - For each design tool requirement → workflow task
+   - For each manufacturing process → feasibility task
 
 2. **Generate and dispatch research agents**:
    ```
    For each unknown in Technical Context:
-     Task: "Research {unknown} for {feature context}"
-   For each technology choice:
-     Task: "Find best practices for {tech} in {domain}"
+     Task: "Research {unknown} for {hardware context}"
+   For each hardware platform choice:
+     Task: "Find specifications and design guidelines for {platform} in {domain}"
+   For each tool/process:
+     Task: "Research design workflow for {tool} in {application}"
    ```
 
 3. **Consolidate findings** in `research.md` using format:
    - Decision: [what was chosen]
    - Rationale: [why chosen]
    - Alternatives considered: [what else evaluated]
+   - Specifications: [key technical parameters]
+   - Constraints: [limitations and requirements]
 
 **Output**: research.md with all NEEDS CLARIFICATION resolved
 
-## Phase 1: Design & Contracts
+## Phase 1: Design & Specifications
 *Prerequisites: research.md complete*
 
-1. **Extract entities from feature spec** → `data-model.md`:
-   - Entity name, fields, relationships
-   - Validation rules from requirements
-   - State transitions if applicable
+1. **Extract system components from feature spec** → `data-model.md`:
+   - Component specifications and interfaces
+   - Communication protocols and data formats
+   - Power requirements and signal characteristics
+   - Environmental and performance constraints
 
-2. **Generate API contracts** from functional requirements:
-   - For each user action → endpoint
-   - Use standard REST/GraphQL patterns
-   - Output OpenAPI/GraphQL schema to `/contracts/`
+2. **Generate hardware specifications** from functional requirements:
+   - Mechanical: dimensions, materials, mounting, enclosures → `/hardware/mechanical-spec.md`
+   - Electrical: schematics, power, connectors, PCB → `/hardware/electrical-spec.md`  
+   - Embedded: firmware architecture, communication, interfaces → `/hardware/embedded-spec.md`
 
-3. **Generate contract tests** from contracts:
-   - One test file per endpoint
-   - Assert request/response schemas
-   - Tests must fail (no implementation yet)
+3. **Generate design validation tests** from specifications:
+   - Mechanical: stress analysis, fit tests, material validation
+   - Electrical: design rule checks, power analysis, signal integrity
+   - Embedded: unit tests, communication tests, integration tests
+   - Tests must be defined before implementation begins
 
 4. **Extract test scenarios** from user stories:
-   - Each story → integration test scenario
-   - Quickstart test = story validation steps
+   - Each story → system-level test scenario
+   - Quickstart test = end-to-end validation steps
+   - Environmental and performance validation procedures
 
 5. **Update agent file incrementally** (O(1) operation):
    - Run `/scripts/update-agent-context.sh [claude|gemini|copilot]` for your AI assistant
-   - If exists: Add only NEW tech from current plan
+   - If exists: Add only NEW hardware context from current plan
    - Preserve manual additions between markers
-   - Update recent changes (keep last 3)
+   - Update recent design changes (keep last 3)
    - Keep under 150 lines for token efficiency
    - Output to repository root
 
-**Output**: data-model.md, /contracts/*, failing tests, quickstart.md, agent-specific file
+**Output**: data-model.md, /hardware/*, design validation procedures, quickstart.md, agent-specific file
 
 ## Phase 2: Task Planning Approach
 *This section describes what the /tasks command will do - DO NOT execute during /plan*
 
 **Task Generation Strategy**:
 - Load `/templates/tasks-template.md` as base
-- Generate tasks from Phase 1 design docs (contracts, data model, quickstart)
-- Each contract → contract test task [P]
-- Each entity → model creation task [P] 
-- Each user story → integration test task
-- Implementation tasks to make tests pass
+- Generate tasks from Phase 1 design docs (hardware specs, data model, quickstart)
+- Each hardware spec → design validation task [P]
+- Each subsystem → design and simulation task [P] 
+- Each user story → system integration test task
+- Implementation tasks for mechanical, electrical, and embedded subsystems
 
 **Ordering Strategy**:
-- TDD order: Tests before implementation 
-- Dependency order: Models before services before UI
-- Mark [P] for parallel execution (independent files)
+- Design-for-Test order: Test procedures before implementation 
+- Dependency order: Mechanical → Electrical → Embedded → Integration
+- Mark [P] for parallel execution (independent subsystems)
 
-**Estimated Output**: 25-30 numbered, ordered tasks in tasks.md
+**Estimated Output**: 20-25 numbered, ordered tasks in tasks.md covering:
+- Mechanical design and validation
+- Electrical schematic and PCB design
+- Embedded firmware development
+- System integration and testing
 
 **IMPORTANT**: This phase is executed by the /tasks command, NOT by /plan
 
@@ -204,16 +238,16 @@ ios/ or android/
 *These phases are beyond the scope of the /plan command*
 
 **Phase 3**: Task execution (/tasks command creates tasks.md)  
-**Phase 4**: Implementation (execute tasks.md following constitutional principles)  
-**Phase 5**: Validation (run tests, execute quickstart.md, performance validation)
+**Phase 4**: Hardware implementation (execute tasks.md following constitutional principles)  
+**Phase 5**: Validation (run design verification, execute quickstart.md, performance validation)
 
 ## Complexity Tracking
 *Fill ONLY if Constitution Check has violations that must be justified*
 
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
-| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
-| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
+| [e.g., 4th subsystem] | [current need] | [why 3 subsystems insufficient] |
+| [e.g., Custom connector] | [specific requirement] | [why standard connectors insufficient] |
 
 
 ## Progress Tracking
@@ -221,11 +255,11 @@ ios/ or android/
 
 **Phase Status**:
 - [ ] Phase 0: Research complete (/plan command)
-- [ ] Phase 1: Design complete (/plan command)
+- [ ] Phase 1: Hardware design complete (/plan command)
 - [ ] Phase 2: Task planning complete (/plan command - describe approach only)
 - [ ] Phase 3: Tasks generated (/tasks command)
-- [ ] Phase 4: Implementation complete
-- [ ] Phase 5: Validation passed
+- [ ] Phase 4: Hardware implementation complete
+- [ ] Phase 5: Design validation passed
 
 **Gate Status**:
 - [ ] Initial Constitution Check: PASS
