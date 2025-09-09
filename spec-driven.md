@@ -1,167 +1,169 @@
-# Specification-Driven Development (SDD)
+# Specification-Driven Hardware Development (SDD)
 
 ## The Power Inversion
 
-For decades, code has been king. Specifications served code—they were the scaffolding we built and then discarded once the "real work" of coding began. We wrote PRDs to guide development, created design docs to inform implementation, drew diagrams to visualize architecture. But these were always subordinate to the code itself. Code was truth. Everything else was, at best, good intentions. Code was the source of truth, as it moved forward, and spec's rarely kept pace. As the asset (code) and the implementation are one, it's not easy to have a parallel implementation without trying to build from the code.
+For decades, CAD files and circuit schematics have been king. Specifications served design files—they were the scaffolding we built and then discarded once the "real work" of design began. We wrote PRDs to guide development, created requirement docs to inform implementation, drew system diagrams to visualize architecture. But these were always subordinate to the design files themselves. CAD models were truth. PCB layouts were truth. Firmware code was truth. Everything else was, at best, good intentions. Design files were the source of truth, as they moved forward, and specs rarely kept pace. As the asset (design files) and the implementation are one, it's not easy to have a parallel implementation without trying to rebuild from the design files.
 
-Spec-Driven Development (SDD) inverts this power structure. Specifications don't serve code—code serves specifications. The (Product Requirements Document-Specification) PRD isn't a guide for implementation; it's the source that generates implementation. Technical plans aren't documents that inform coding; they're precise definitions that produce code. This isn't an incremental improvement to how we build software. It's a fundamental rethinking of what drives development.
+Spec-Driven Hardware Development (SDD) inverts this power structure. Specifications don't serve design files—design files serve specifications. The (Product Requirements Document-Specification) PRD isn't a guide for implementation; it's the source that generates implementation. Technical plans aren't documents that inform design; they're precise definitions that produce mechanical designs, electrical schematics, PCB layouts, and embedded firmware. This isn't an incremental improvement to how we build hardware. It's a fundamental rethinking of what drives hardware development.
 
-The gap between specification and implementation has plagued software development since its inception. We've tried to bridge it with better documentation, more detailed requirements, stricter processes. These approaches fail because they accept the gap as inevitable. They try to narrow it but never eliminate it. SDD eliminates the gap by making specifications or and their concrete implementation plans born from the specification executable. When specifications to implementation plans generate code, there is no gap—only transformation.
+The gap between specification and implementation has plagued hardware development since its inception. We've tried to bridge it with better documentation, more detailed requirements, stricter design reviews. These approaches fail because they accept the gap as inevitable. They try to narrow it but never eliminate it. SDD eliminates the gap by making specifications and their concrete implementation plans executable. When specifications and implementation plans generate hardware designs, there is no gap—only transformation.
 
-This transformation is now possible because AI can understand and implement complex specifications, and create detailed implementation plans. But raw AI generation without structure produces chaos. SDD provides that structure through specifications and subsequent implementation plans that are precise, complete, and unambiguous enough to generate working systems. The specification becomes the primary artifact. Code becomes its expression (as an implementation from the implementation plan) in a particular language and framework.
+This transformation is now possible because AI can understand and implement complex hardware specifications, and create detailed implementation plans spanning mechanical, electrical, and embedded systems. But raw AI generation without structure produces chaos. SDD provides that structure through specifications and subsequent implementation plans that are precise, complete, and unambiguous enough to generate working hardware systems. The specification becomes the primary artifact. Design files become their expression as an implementation from the implementation plan for particular manufacturing processes and component choices.
 
-In this new world, maintaining software means evolving specifications. The intent of the development team is expressed in natural language ("**intent-driven development**"), design assets, core principles and other guidelines . The **lingua franca** of development moves to a higher-level, and code is the last-mile approach.
+In this new world, maintaining hardware means evolving specifications. The intent of the development team is expressed in natural language ("**intent-driven development**"), design assets, core principles and other guidelines. The **lingua franca** of development moves to a higher-level, and design files are the last-mile approach.
 
-Debugging means fixing specifications and their implementation plans that generate incorrect code. Refactoring means restructuring for clarity. The entire development workflow reorganizes around specifications as the central source of truth, with implementation plans and code as the continuously regenerated output. Updating apps with new features or creating a new parallel implementation because we are creative beings, means revisiting the specification and creating new implementation plans. This process is therefore a 0 -> 1, (1', ..), 2, 3, N.
+Debugging means fixing specifications and their implementation plans that generate incorrect designs. Refactoring means restructuring for clarity and manufacturability. The entire development workflow reorganizes around specifications as the central source of truth, with implementation plans and design files as the continuously regenerated output. Updating products with new features or creating a new parallel implementation because we are creative beings, means revisiting the specification and creating new implementation plans. This process is therefore a 0 -> 1, (1', ..), 2, 3, N.
 
-The development team focuses in on their creativity, experimentation, their critical thinking.
+The development team focuses on their creativity, experimentation, their critical thinking.
 
 ## The SDD Workflow in Practice
 
-The workflow begins with an idea—often vague and incomplete. Through iterative dialogue with AI, this idea becomes a comprehensive PRD. The AI asks clarifying questions, identifies edge cases, and helps define precise acceptance criteria. What might take days of meetings and documentation in traditional development happens in hours of focused specification work. This transforms the traditional SDLC—requirements and design become continuous activities rather than discrete phases. This is supportive of a **team process**, that's team reviewed-specifications are expressed and versioned, created in branches, and merged.
+The workflow begins with an idea—often vague and incomplete. Through iterative dialogue with AI, this idea becomes a comprehensive hardware PRD. The AI asks clarifying questions, identifies design constraints, and helps define precise acceptance criteria covering mechanical, electrical, and embedded requirements. What might take weeks of meetings and documentation in traditional hardware development happens in hours of focused specification work. This transforms the traditional hardware development lifecycle—requirements and design become continuous activities rather than discrete phases. This is supportive of a **team process**, that's team reviewed-specifications are expressed and versioned, created in branches, and merged.
 
-When a product manager updates acceptance criteria, implementation plans automatically flag affected technical decisions. When an architect discovers a better pattern, the PRD updates to reflect new possibilities.
+When a product manager updates acceptance criteria, implementation plans automatically flag affected mechanical designs, electrical schematics, and firmware architectures. When an engineer discovers a better component or manufacturing process, the PRD updates to reflect new possibilities.
 
-Throughout this specification process, research agents gather critical context. They investigate library compatibility, performance benchmarks, and security implications. Organizational constraints are discovered and applied automatically—your company's database standards, authentication requirements, and deployment policies seamlessly integrate into every specification.
+Throughout this specification process, research agents gather critical context. They investigate component availability, manufacturing constraints, regulatory requirements, and cost implications. Organizational constraints are discovered and applied automatically—your company's manufacturing partners, component sourcing standards, certification requirements, and design for manufacturing (DFM) guidelines seamlessly integrate into every specification.
 
-From the PRD, AI generates implementation plans that map requirements to technical decisions. Every technology choice has documented rationale. Every architectural decision traces back to specific requirements. Throughout this process, consistency validation continuously improves quality. AI analyzes specifications for ambiguity, contradictions, and gaps—not as a one-time gate, but as an ongoing refinement.
+From the PRD, AI generates implementation plans that map requirements to technical decisions across mechanical, electrical, and embedded domains. Every component choice has documented rationale. Every design decision traces back to specific requirements. Throughout this process, consistency validation continuously improves quality. AI analyzes specifications for ambiguity, contradictions, and gaps—not as a one-time gate, but as an ongoing refinement.
 
-Code generation begins as soon as specifications and their implementation plans are stable enough, but they do not have to be "complete." Early generations might be exploratory—testing whether the specification makes sense in practice. Domain concepts become data models. User stories become API endpoints. Acceptance scenarios become tests. This merges development and testing through specification—test scenarios aren't written after code, they're part of the specification that generates both implementation and tests.
+Design generation begins as soon as specifications and their implementation plans are stable enough, but they do not have to be "complete." Early generations might be exploratory—testing whether the specification makes sense in practice. System concepts become mechanical assemblies. User interactions become electrical interfaces. Performance requirements become embedded algorithms. This merges development and testing through specification—test scenarios aren't written after design, they're part of the specification that generates both implementation and validation procedures.
 
-The feedback loop extends beyond initial development. Production metrics and incidents don't just trigger hotfixes—they update specifications for the next regeneration. Performance bottlenecks become new non-functional requirements. Security vulnerabilities become constraints that affect all future generations. This iterative dance between specification, implementation, and operational reality is where true understanding emerges and where the traditional SDLC transforms into a continuous evolution.
+The feedback loop extends beyond initial development. Manufacturing feedback, field performance data, and failure analysis don't just trigger design revisions—they update specifications for the next regeneration. Thermal issues become new cooling requirements. Component availability problems become new sourcing constraints. User feedback becomes refined interface specifications. This iterative dance between specification, implementation, and operational reality is where true understanding emerges and where the traditional hardware development lifecycle transforms into a continuous evolution.
 
-## Why SDD Matters Now
+## Why SDD Matters Now for Hardware
 
-Three trends make SDD not just possible but necessary:
+Three trends make SDD not just possible but necessary for hardware development:
 
-First, AI capabilities have reached a threshold where natural language specifications can reliably generate working code. This isn't about replacing developers—it's about amplifying their effectiveness by automating the mechanical translation from specification to implementation. It can amplify exploration and creativity, it can support "start-over" easily, it supports addition subtraction and critical thinking.
+First, AI capabilities have reached a threshold where natural language specifications can reliably generate working hardware designs. This isn't about replacing engineers—it's about amplifying their effectiveness by automating the mechanical translation from specification to implementation across mechanical, electrical, and embedded domains. It can amplify exploration and creativity, it can support "start-over" easily, it supports addition subtraction and critical thinking.
 
-Second, software complexity continues to grow exponentially. Modern systems integrate dozens of services, frameworks, and dependencies. Keeping all these pieces aligned with original intent through manual processes becomes increasingly difficult. SDD provides systematic alignment through specification-driven generation. Frameworks may evolve to provide AI-first support, not human-first support, or architect around reusable components.
+Second, hardware complexity continues to grow exponentially. Modern products integrate sophisticated mechanical systems, complex electronics, wireless communication, embedded AI, and regulatory compliance requirements. Keeping all these interdisciplinary pieces aligned with original intent through manual processes becomes increasingly difficult. SDD provides systematic alignment through specification-driven generation. Design tools may evolve to provide AI-first support, not human-first support, or architect around reusable component libraries.
 
-Third, the pace of change accelerates. Requirements change far more rapidly today than ever before. Pivoting is no longer exceptional—it's expected. Modern product development demands rapid iteration based on user feedback, market conditions, and competitive pressures. Traditional development treats these changes as disruptions. Each pivot requires manually propagating changes through documentation, design, and code. The result is either slow, careful updates that limit velocity, or fast, reckless changes that accumulate technical debt.
+Third, the pace of hardware development accelerates. Requirements change more rapidly than traditional hardware development can accommodate. Market demands, supply chain disruptions, regulatory changes, and technological advances create constant pressure for adaptation. Traditional hardware development treats these changes as costly disruptions requiring complete redesign cycles. Each pivot requires manually propagating changes through mechanical designs, electrical schematics, PCB layouts, firmware, and manufacturing processes. The result is either slow, careful updates that limit time-to-market, or fast, reckless changes that accumulate design debt and quality issues.
 
-SDD can support what-if/simulation experiments, "If we need to re-implement or change the application to promote a business need to sell more T-shirts, how would we implement and experiment for that?".
+SDD can support what-if/simulation experiments, "If we need to re-implement or change the product to target a different market segment with different power requirements, how would we redesign the power management system and what would be the manufacturing impact?".
 
-SDD transforms requirement changes from obstacles into normal workflow. When specifications drive implementation, pivots become systematic regenerations rather than manual rewrites. Change a core requirement in the PRD, and affected implementation plans update automatically. Modify a user story, and corresponding API endpoints regenerate. This isn't just about initial development—it's about maintaining engineering velocity through inevitable changes.
+SDD transforms requirement changes from obstacles into normal workflow. When specifications drive implementation, design changes become systematic regenerations rather than manual redesigns. Change a core performance requirement in the PRD, and affected mechanical, electrical, and embedded designs update automatically. Modify a user interface requirement, and corresponding mechanical controls, electrical interfaces, and firmware implementations regenerate. This isn't just about initial development—it's about maintaining engineering velocity through inevitable changes while preserving design integrity.
 
 ## Core Principles
 
-**Specifications as the Lingua Franca**: The specification becomes the primary artifact. Code becomes its expression in a particular language and framework. Maintaining software means evolving specifications.
+**Specifications as the Lingua Franca**: The specification becomes the primary artifact. Design files become their expression for particular manufacturing processes and component choices. Maintaining hardware means evolving specifications.
 
-**Executable Specifications**: Specifications must be precise, complete, and unambiguous enough to generate working systems. This eliminates the gap between intent and implementation.
+**Executable Specifications**: Specifications must be precise, complete, and unambiguous enough to generate working hardware systems across mechanical, electrical, and embedded domains. This eliminates the gap between intent and implementation.
 
-**Continuous Refinement**: Consistency validation happens continuously, not as a one-time gate. AI analyzes specifications for ambiguity, contradictions, and gaps as an ongoing process.
+**Continuous Refinement**: Consistency validation happens continuously, not as a one-time gate. AI analyzes specifications for ambiguity, contradictions, and gaps as an ongoing process across all engineering disciplines.
 
-**Research-Driven Context**: Research agents gather critical context throughout the specification process, investigating technical options, performance implications, and organizational constraints.
+**Research-Driven Context**: Research agents gather critical context throughout the specification process, investigating component specifications, manufacturing constraints, regulatory requirements, and cost implications.
 
-**Bidirectional Feedback**: Production reality informs specification evolution. Metrics, incidents, and operational learnings become inputs for specification refinement.
+**Bidirectional Feedback**: Manufacturing reality and field performance inform specification evolution. Design for manufacturing feedback, component availability, field failures, and user experience become inputs for specification refinement.
 
-**Branching for Exploration**: Generate multiple implementation approaches from the same specification to explore different optimization targets—performance, maintainability, user experience, cost.
+**Multi-Disciplinary Integration**: Generate coordinated implementations across mechanical, electrical, and embedded systems from unified specifications, ensuring proper interfaces and constraints are maintained across domains.
 
 ## Implementation Approaches
 
-Today, practicing SDD requires assembling existing tools and maintaining discipline throughout the process. The methodology can be practiced with:
+Today, practicing SDD for hardware requires assembling existing tools and maintaining discipline throughout the process. The methodology can be practiced with:
 
 - AI assistants for iterative specification development
-- Research agents for gathering technical context
-- Code generation tools for translating specifications to implementation
-- Version control systems adapted for specification-first workflows
-- Consistency checking through AI analysis of specification documents
+- Research agents for gathering technical context and component information
+- Design generation tools for translating specifications to mechanical designs (Fusion360), electrical schematics (KiCAD), and embedded firmware
+- Version control systems adapted for specification-first workflows with large binary design files
+- Consistency checking through AI analysis of specification documents across engineering disciplines
 
-The key is treating specifications as the source of truth, with code as the generated output that serves the specification rather than the other way around.
+The key is treating specifications as the source of truth, with design files as the generated output that serves the specification rather than the other way around.
 
-## Streamlining SDD with Claude Commands
+## Streamlining SDD with Claude Commands for Hardware
 
-The SDD methodology is significantly enhanced through two powerful Claude commands that automate the specification and planning workflow:
+The SDD methodology is significantly enhanced through two powerful Claude commands that automate the specification and planning workflow for hardware development:
 
 ### The `new_feature` Command
 
-This command transforms a simple feature description (the user-prompt) into a complete, structured specification with automatic repository management:
+This command transforms a simple hardware feature description (the user-prompt) into a complete, structured specification with automatic repository management:
 
 1. **Automatic Feature Numbering**: Scans existing specs to determine the next feature number (e.g., 001, 002, 003)
 2. **Branch Creation**: Generates a semantic branch name from your description and creates it automatically
-3. **Template-Based Generation**: Copies and customizes the feature specification template with your requirements
+3. **Template-Based Generation**: Copies and customizes the hardware feature specification template with your requirements
 4. **Directory Structure**: Creates the proper `specs/[branch-name]/` structure for all related documents
 
 ### The `generate_plan` Command
 
-Once a feature specification exists, this command creates a comprehensive implementation plan:
+Once a hardware feature specification exists, this command creates a comprehensive implementation plan:
 
 1. **Specification Analysis**: Reads and understands the feature requirements, user stories, and acceptance criteria
-2. **Constitutional Compliance**: Ensures alignment with project constitution and architectural principles
-3. **Technical Translation**: Converts business requirements into technical architecture and implementation details
-4. **Detailed Documentation**: Generates supporting documents for data models, API contracts, and test scenarios
-5. **Manual Testing Plans**: Creates step-by-step validation procedures for each user story
+2. **Constitutional Compliance**: Ensures alignment with hardware project constitution and design principles
+3. **Technical Translation**: Converts product requirements into mechanical, electrical, and embedded system architectures
+4. **Detailed Documentation**: Generates supporting documents for hardware specifications, component lists, and test procedures
+5. **Manual Testing Plans**: Creates step-by-step validation procedures for each hardware subsystem
 
-### Example: Building a Chat Feature
+### Example: Building a Wireless Sensor Node
 
-Here's how these commands transform the traditional development workflow:
+Here's how these commands transform the traditional hardware development workflow:
 
 **Traditional Approach:**
 ```
 1. Write a PRD in a document (2-3 hours)
-2. Create design documents (2-3 hours)
-3. Set up project structure manually (30 minutes)
-4. Write technical specifications (3-4 hours)
-5. Create test plans (2 hours)
-Total: ~12 hours of documentation work
+2. Create mechanical design documents (4-6 hours)
+3. Create electrical schematics and specifications (4-6 hours)
+4. Define embedded system architecture (3-4 hours)
+5. Set up project structure manually (1 hour)
+6. Create test and validation plans (3-4 hours)
+Total: ~20-25 hours of documentation work
 ```
 
 **SDD with Commands Approach:**
 ```bash
-# Step 1: Create the feature specification (5 minutes)
-/new_feature Real-time chat system with message history and user presence
+# Step 1: Create the hardware feature specification (5 minutes)
+/new_feature Wireless environmental sensor node with temperature, humidity monitoring, 1-year battery life, and LoRaWAN connectivity
 
 # This automatically:
-# - Creates branch "003-chat-system"
-# - Generates specs/003-chat-system/feature-spec.md
-# - Populates it with structured requirements
+# - Creates branch "003-sensor-node"
+# - Generates specs/003-sensor-node/feature-spec.md
+# - Populates it with structured hardware requirements
 
 # Step 2: Generate implementation plan (10 minutes)
-/generate_plan WebSocket for real-time messaging, PostgreSQL for history, Redis for presence
+/generate_plan ESP32-S3 microcontroller, DHT22 sensors, LoRa module, 3D printed PETG enclosure, 18650 battery with solar charging, KiCAD PCB design
 
 # This automatically creates:
-# - specs/003-chat-system/implementation-plan.md
-# - specs/003-chat-system/implementation-details/
-#   - 00-research.md (WebSocket library comparisons)
-#   - 02-data-model.md (Message and User schemas)
-#   - 03-api-contracts.md (WebSocket events, REST endpoints)
-#   - 06-contract-tests.md (Message flow scenarios)
-#   - 08-inter-library-tests.md (Database-WebSocket integration)
-# - specs/003-chat-system/manual-testing.md
+# - specs/003-sensor-node/implementation-plan.md
+# - specs/003-sensor-node/hardware/
+#   - mechanical-spec.md (Enclosure design, materials, mounting)
+#   - electrical-spec.md (Schematic, PCB layout, power management)
+#   - embedded-spec.md (Firmware architecture, communication protocols)
+# - specs/003-sensor-node/research.md (Component comparisons, power analysis)
+# - specs/003-sensor-node/data-model.md (Sensor data formats, communication protocols)
+# - specs/003-sensor-node/manual-testing.md (Validation procedures)
 ```
 
 In 15 minutes, you have:
-- A complete feature specification with user stories and acceptance criteria
-- A detailed implementation plan with technology choices and rationale
-- API contracts and data models ready for code generation
-- Comprehensive test scenarios for both automated and manual testing
+- A complete hardware feature specification with user stories and acceptance criteria
+- A detailed implementation plan with component choices and design rationale
+- Hardware specifications for mechanical, electrical, and embedded subsystems ready for design
+- Comprehensive test scenarios for both component-level and system-level testing
 - All documents properly versioned in a feature branch
 
 ### The Power of Structured Automation
 
-These commands don't just save time—they enforce consistency and completeness:
+These commands don't just save time—they enforce consistency and completeness across disciplines:
 
-1. **No Forgotten Details**: Templates ensure every aspect is considered, from non-functional requirements to error handling
-2. **Traceable Decisions**: Every technical choice links back to specific requirements
-3. **Living Documentation**: Specifications stay in sync with code because they generate it
-4. **Rapid Iteration**: Change requirements and regenerate plans in minutes, not days
+1. **No Forgotten Details**: Templates ensure every aspect is considered, from environmental requirements to regulatory compliance
+2. **Traceable Decisions**: Every component choice and design decision links back to specific requirements
+3. **Living Documentation**: Specifications stay in sync with design files because they generate them
+4. **Rapid Iteration**: Change requirements and regenerate design plans in minutes, not days
+5. **Multi-Disciplinary Coordination**: Ensures mechanical, electrical, and embedded systems are properly integrated
 
-The commands embody SDD principles by treating specifications as executable artifacts rather than static documents. They transform the specification process from a necessary evil into the driving force of development.
+The commands embody SDD principles by treating specifications as executable artifacts rather than static documents. They transform the specification process from a necessary evil into the driving force of hardware development.
 
-### Template-Driven Quality: How Structure Constrains LLMs for Better Outcomes
+### Template-Driven Quality: How Structure Constrains LLMs for Better Hardware Outcomes
 
-The true power of these commands lies not just in automation, but in how the templates guide LLM behavior toward higher-quality specifications. The templates act as sophisticated prompts that constrain the LLM's output in productive ways:
+The true power of these commands lies not just in automation, but in how the templates guide LLM behavior toward higher-quality hardware specifications. The templates act as sophisticated prompts that constrain the LLM's output in productive ways:
 
 #### 1. **Preventing Premature Implementation Details**
 
-The feature specification template explicitly instructs:
+The hardware feature specification template explicitly instructs:
 ```
-- ✅ Focus on WHAT users need and WHY
-- ❌ Avoid HOW to implement (no tech stack, APIs, code structure)
+- ✅ Focus on WHAT users need and WHY, and WHAT the hardware must do
+- ❌ Avoid HOW to implement (no specific MCU/SBC models, CAD tools, PCB layouts)
 ```
 
-This constraint forces the LLM to maintain proper abstraction levels. When an LLM might naturally jump to "implement using React with Redux," the template keeps it focused on "users need real-time updates of their data." This separation ensures specifications remain stable even as implementation technologies change.
+This constraint forces the LLM to maintain proper abstraction levels. When an LLM might naturally jump to "implement using ESP32 with Arduino IDE," the template keeps it focused on "users need wireless environmental monitoring with 1-year battery life." This separation ensures specifications remain stable even as implementation technologies and component choices change.
 
 #### 2. **Forcing Explicit Uncertainty Markers**
 
@@ -172,7 +174,7 @@ When creating this spec from a user prompt:
 2. **Don't guess**: If the prompt doesn't specify something, mark it
 ```
 
-This prevents the common LLM behavior of making plausible but potentially incorrect assumptions. Instead of guessing that a "login system" uses email/password authentication, the LLM must mark it as `[NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]`.
+This prevents the common LLM behavior of making plausible but potentially incorrect assumptions. Instead of guessing that a "wireless sensor" uses WiFi communication, the LLM must mark it as `[NEEDS CLARIFICATION: protocol not specified - WiFi, LoRa, Bluetooth, Zigbee?]`.
 
 #### 3. **Structured Thinking Through Checklists**
 
@@ -180,165 +182,167 @@ The templates include comprehensive checklists that act as "unit tests" for the 
 ```
 ### Requirement Completeness
 - [ ] No [NEEDS CLARIFICATION] markers remain
-- [ ] Requirements are testable and unambiguous  
-- [ ] Success criteria are measurable
+- [ ] Requirements are testable and measurable
+- [ ] Physical and environmental constraints defined
+- [ ] Power and communication requirements specified
 ```
 
-These checklists force the LLM to self-review its output systematically, catching gaps that might otherwise slip through. It's like giving the LLM a quality assurance framework.
+These checklists force the LLM to self-review its output systematically, catching gaps that might otherwise slip through. It's like giving the LLM a quality assurance framework specifically tuned for hardware development.
 
 #### 4. **Constitutional Compliance Through Gates**
 
-The implementation plan template enforces architectural principles through phase gates:
+The implementation plan template enforces design principles through phase gates:
 ```
 ### Phase -1: Pre-Implementation Gates
-#### Simplicity Gate (Article VII)
-- [ ] Using ≤3 projects?
-- [ ] No future-proofing?
-#### Anti-Abstraction Gate (Article VIII)
-- [ ] Using framework directly?
-- [ ] Single model representation?
+#### Design Modularity Gate
+- [ ] Using ≤3 subsystems?
+- [ ] Standard interfaces defined?
+#### Design-for-Test Gate
+- [ ] Test procedures defined?
+- [ ] Validation plan exists?
 ```
 
-These gates prevent over-engineering by making the LLM explicitly justify any complexity. If a gate fails, the LLM must document why in the "Complexity Tracking" section, creating accountability for architectural decisions.
+These gates prevent over-engineering by making the LLM explicitly justify any complexity. If a gate fails, the LLM must document why in the "Complexity Tracking" section, creating accountability for design decisions.
 
 #### 5. **Hierarchical Detail Management**
 
 The templates enforce proper information architecture:
 ```
 **IMPORTANT**: This implementation plan should remain high-level and readable. 
-Any code samples, detailed algorithms, or extensive technical specifications 
-must be placed in the appropriate `implementation-details/` file
+Any detailed component specifications, CAD models, or extensive technical 
+specifications must be placed in the appropriate `hardware/` subdirectories
 ```
 
-This prevents the common problem of specifications becoming unreadable code dumps. The LLM learns to maintain appropriate detail levels, extracting complexity to separate files while keeping the main document navigable.
+This prevents the common problem of specifications becoming unreadable technical dumps. The LLM learns to maintain appropriate detail levels, extracting complexity to separate domain-specific files while keeping the main document navigable.
 
-#### 6. **Test-First Thinking**
+#### 6. **Design-First Thinking**
 
-The implementation template enforces test-first development:
+The implementation template enforces design-for-test development:
 ```
-### File Creation Order
-1. Create `contracts/` with API specifications
-2. Create test files in order: contract → integration → e2e → unit
-3. Create source files to make tests pass
+### Design Creation Order
+1. Create hardware specifications for each subsystem
+2. Create validation procedures in order: component → subsystem → system
+3. Create design files to meet specifications
 ```
 
-This ordering constraint ensures the LLM thinks about testability and contracts before implementation, leading to more robust and verifiable specifications.
+This ordering constraint ensures the LLM thinks about testability and validation before implementation, leading to more robust and verifiable hardware designs.
 
 #### 7. **Preventing Speculative Features**
 
 Templates explicitly discourage speculation:
 ```
 - [ ] No speculative or "might need" features
-- [ ] All phases have clear prerequisites and deliverables
+- [ ] All subsystems have clear interfaces and deliverables
+- [ ] Environmental and regulatory requirements identified
 ```
 
-This stops the LLM from adding "nice to have" features that complicate implementation. Every feature must trace back to a concrete user story with clear acceptance criteria.
+This stops the LLM from adding "nice to have" features that complicate design and manufacturing. Every feature must trace back to a concrete user story with clear acceptance criteria.
 
 ### The Compound Effect
 
-These constraints work together to produce specifications that are:
-- **Complete**: Checklists ensure nothing is forgotten
-- **Unambiguous**: Forced clarification markers highlight uncertainties
-- **Testable**: Test-first thinking baked into the process
-- **Maintainable**: Proper abstraction levels and information hierarchy
-- **Implementable**: Clear phases with concrete deliverables
+These constraints work together to produce hardware specifications that are:
+- **Complete**: Checklists ensure nothing is forgotten across mechanical, electrical, and embedded domains
+- **Unambiguous**: Forced clarification markers highlight uncertainties in specifications
+- **Testable**: Design-for-test thinking baked into the process
+- **Maintainable**: Proper abstraction levels and information hierarchy across engineering disciplines
+- **Implementable**: Clear phases with concrete deliverables for each engineering domain
 
-The templates transform the LLM from a creative writer into a disciplined specification engineer, channeling its capabilities toward producing consistently high-quality, executable specifications that truly drive development.
+The templates transform the LLM from a creative writer into a disciplined hardware specification engineer, channeling its capabilities toward producing consistently high-quality, executable specifications that truly drive hardware development.
 
-## The Constitutional Foundation: Enforcing Architectural Discipline
+## The Constitutional Foundation: Enforcing Design Discipline
 
-At the heart of SDD lies a constitution—a set of immutable principles that govern how specifications become code. The constitution (`base/memory/constitution.md`) acts as the architectural DNA of the system, ensuring that every generated implementation maintains consistency, simplicity, and quality.
+At the heart of SDD lies a constitution—a set of immutable principles that govern how specifications become hardware designs. The constitution (`memory/constitution.md`) acts as the design DNA of the system, ensuring that every generated implementation maintains consistency, modularity, and quality across mechanical, electrical, and embedded domains.
 
-### The Nine Articles of Development
+### The Five Articles of Hardware Development
 
-The constitution defines nine articles that shape every aspect of the development process:
+The constitution defines five articles that shape every aspect of the hardware development process:
 
-#### Article I: Library-First Principle
-Every feature must begin as a standalone library—no exceptions. This forces modular design from the start:
+#### Article I: Design-First Principle
+Every hardware feature starts as a complete design specification with mechanical, electrical, and embedded components clearly defined:
 ```
-Every feature in Specify MUST begin its existence as a standalone library. 
-No feature shall be implemented directly within application code without 
-first being abstracted into a reusable library component.
-```
-
-This principle ensures that specifications generate modular, reusable code rather than monolithic applications. When the LLM generates an implementation plan, it must structure features as libraries with clear boundaries and minimal dependencies.
-
-#### Article II: CLI Interface Mandate
-Every library must expose its functionality through a command-line interface:
-```
-All CLI interfaces MUST:
-- Accept text as input (via stdin, arguments, or files)
-- Produce text as output (via stdout)
-- Support JSON format for structured data exchange
+Every hardware feature MUST begin with comprehensive design specifications.
+No implementation begins without:
+- Mechanical design constraints and enclosure requirements
+- Electrical schematic and power budgets
+- Embedded firmware architecture and communication protocols
 ```
 
-This enforces observability and testability. The LLM cannot hide functionality inside opaque classes—everything must be accessible and verifiable through text-based interfaces.
+This principle ensures that specifications generate coordinated, integrated designs rather than disconnected subsystems. When the LLM generates an implementation plan, it must structure features with clear interfaces between mechanical, electrical, and embedded domains.
 
-#### Article III: Test-First Imperative
-The most transformative article—no code before tests:
+#### Article II: Multi-Disciplinary Interface
+Every hardware system exposes functionality through well-defined interfaces:
 ```
-This is NON-NEGOTIABLE: All implementation MUST follow strict Test-Driven Development.
-No implementation code shall be written before:
-1. Unit tests are written
-2. Tests are validated and approved by the user
-3. Tests are confirmed to FAIL (Red phase)
-```
-
-This completely inverts traditional AI code generation. Instead of generating code and hoping it works, the LLM must first generate comprehensive tests that define behavior, get them approved, and only then generate implementation.
-
-#### Articles VII & VIII: Simplicity and Anti-Abstraction
-These paired articles combat over-engineering:
-```
-Section 7.3: Minimal Project Structure
-- Maximum 3 projects for initial implementation
-- Additional projects require documented justification
-
-Section 8.1: Framework Trust
-- Use framework features directly rather than wrapping them
+All hardware interfaces MUST:
+- Mechanical: Standard mounting points, connector placements, assembly procedures
+- Electrical: Documented pinouts, power requirements, signal specifications
+- Embedded: API endpoints, communication protocols, configuration interfaces
 ```
 
-When an LLM might naturally create elaborate abstractions, these articles force it to justify every layer of complexity. The implementation plan template's "Phase -1 Gates" directly enforce these principles.
+This enforces integration and testability. The LLM cannot hide functionality inside proprietary interfaces—everything must be accessible and verifiable through standard interfaces.
 
-#### Article IX: Integration-First Testing
-Prioritizes real-world testing over isolated unit tests:
+#### Article III: Design-for-Test Imperative
+The most transformative article—no implementation before test procedures:
 ```
-Tests MUST use realistic environments:
-- Prefer real databases over mocks
-- Use actual service instances over stubs
-- Contract tests mandatory before implementation
+This is NON-NEGOTIABLE: All hardware implementation MUST follow strict Design-for-Test.
+No implementation shall begin before:
+1. Test procedures are defined during specification phase
+2. Test procedures are validated and approved
+3. Design validation tests are confirmed to exist
 ```
 
-This ensures generated code works in practice, not just in theory.
+This completely inverts traditional hardware development. Instead of designing hardware and hoping it works, the LLM must first generate comprehensive test procedures that define validation criteria, get them approved, and only then generate implementation.
+
+#### Article IV: Integration-First Validation
+Prioritizes real-world testing over isolated component tests:
+```
+Hardware systems MUST be tested as integrated systems:
+- Prefer real sensor/actuator interfaces over simulated inputs
+- Use actual communication protocols and physical connections
+- Environmental testing under realistic operating conditions
+```
+
+This ensures generated designs work in practice, not just in theory.
+
+#### Article V: Platform Modularity
+Hardware designs must support modular implementation:
+```
+Hardware designs MUST support modularity:
+- Mechanical: Standardized mounting interfaces and enclosure systems
+- Electrical: Modular PCB designs with standard connectors
+- Embedded: Hardware abstraction layers and standardized communication
+```
+
+When an LLM might naturally create monolithic designs, this article forces modular thinking with clear subsystem boundaries.
 
 ### Constitutional Enforcement Through Templates
 
 The implementation plan template operationalizes these articles through concrete checkpoints:
 
 ```markdown
-### Phase -1: Pre-Implementation Gates
-#### Simplicity Gate (Article VII)
-- [ ] Using ≤3 projects?
-- [ ] No future-proofing?
+### Constitution Check
+#### Design Modularity
+- [ ] Using ≤3 subsystems?
+- [ ] Standard interfaces defined?
 
-#### Anti-Abstraction Gate (Article VIII)
-- [ ] Using framework directly?
-- [ ] Single model representation?
+#### Design-for-Test (NON-NEGOTIABLE)
+- [ ] Test procedures defined before implementation?
+- [ ] Design validation plan exists?
 
-#### Integration-First Gate (Article IX)
-- [ ] Contracts defined?
-- [ ] Contract tests written?
+#### Integration-First
+- [ ] Real environment testing planned?
+- [ ] Actual hardware interfaces specified?
 ```
 
-These gates act as compile-time checks for architectural principles. The LLM cannot proceed without either passing the gates or documenting justified exceptions in the "Complexity Tracking" section.
+These gates act as design review checks for hardware principles. The LLM cannot proceed without either passing the gates or documenting justified exceptions in the "Complexity Tracking" section.
 
 ### The Power of Immutable Principles
 
 The constitution's power lies in its immutability. While implementation details can evolve, the core principles remain constant. This provides:
 
-1. **Consistency Across Time**: Code generated today follows the same principles as code generated next year
-2. **Consistency Across LLMs**: Different AI models produce architecturally compatible code
-3. **Architectural Integrity**: Every feature reinforces rather than undermines the system design
-4. **Quality Guarantees**: Test-first, library-first, and simplicity principles ensure maintainable code
+1. **Consistency Across Time**: Designs generated today follow the same principles as designs generated next year
+2. **Consistency Across LLMs**: Different AI models produce architecturally compatible designs
+3. **Design Integrity**: Every feature reinforces rather than undermines the system design
+4. **Quality Guarantees**: Design-for-test, modularity, and integration principles ensure manufacturable hardware
 
 ### Constitutional Evolution
 
@@ -351,21 +355,21 @@ Modifications to this constitution require:
 - Backwards compatibility assessment
 ```
 
-This allows the methodology to learn and improve while maintaining stability. The constitution shows its own evolution with dated amendments, demonstrating how principles can be refined based on real-world experience.
+This allows the methodology to learn and improve while maintaining stability. The constitution shows its own evolution with dated amendments, demonstrating how principles can be refined based on real-world hardware development experience.
 
-### Beyond Rules: A Development Philosophy
+### Beyond Rules: A Design Philosophy
 
-The constitution isn't just a rulebook—it's a philosophy that shapes how LLMs think about code generation:
+The constitution isn't just a rulebook—it's a philosophy that shapes how LLMs think about hardware design generation:
 
-- **Observability Over Opacity**: Everything must be inspectable through CLI interfaces
-- **Simplicity Over Cleverness**: Start simple, add complexity only when proven necessary
-- **Integration Over Isolation**: Test in real environments, not artificial ones
-- **Modularity Over Monoliths**: Every feature is a library with clear boundaries
+- **Integration Over Isolation**: Test in real environments with actual hardware, not simulated ones
+- **Modularity Over Monoliths**: Every subsystem has clear interfaces and boundaries
+- **Validation Over Assumption**: Design validation procedures are mandatory before implementation
+- **Standards Over Custom**: Use standard interfaces and components unless custom solutions are justified
 
-By embedding these principles into the specification and planning process, SDD ensures that generated code isn't just functional—it's maintainable, testable, and architecturally sound. The constitution transforms AI from a code generator into an architectural partner that respects and reinforces system design principles.
+By embedding these principles into the specification and planning process, SDD ensures that generated designs aren't just functional—they're manufacturable, testable, and architecturally sound. The constitution transforms AI from a design generator into a design partner that respects and reinforces hardware engineering principles.
 
 ## The Transformation
 
-This isn't about replacing developers or automating creativity. It's about amplifying human capability by automating mechanical translation. It's about creating a tight feedback loop where specifications, research, and code evolve together, each iteration bringing deeper understanding and better alignment between intent and implementation.
+This isn't about replacing engineers or automating creativity. It's about amplifying human capability by automating mechanical translation from specifications to designs. It's about creating a tight feedback loop where specifications, research, and hardware designs evolve together, each iteration bringing deeper understanding and better alignment between intent and implementation.
 
-Software development needs better tools for maintaining alignment between intent and implementation. SDD provides the methodology for achieving this alignment through executable specifications that generate code rather than merely guiding it.
+Hardware development needs better tools for maintaining alignment between intent and implementation across mechanical, electrical, and embedded domains. SDD provides the methodology for achieving this alignment through executable specifications that generate coordinated hardware designs rather than merely guiding them.
