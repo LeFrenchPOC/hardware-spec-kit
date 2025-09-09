@@ -10,14 +10,14 @@
 # ]
 # ///
 """
-Specify CLI - Setup tool for Specify projects
+Hardware Specify CLI - Setup tool for Hardware Specify projects
 
 Usage:
-    uvx specify-cli.py init <project-name>
-    uvx specify-cli.py init --here
+    uvx hardware-specify-cli.py init <project-name>
+    uvx hardware-specify-cli.py init --here
 
 Or install globally:
-    uv tool install --from specify-cli.py specify-cli
+    uv tool install --from hardware-specify-cli.py hardware-specify-cli
     specify init <project-name>
     specify init --here
 """
@@ -64,7 +64,7 @@ BANNER = """
 ╚══════╝╚═╝     ╚══════╝ ╚═════╝╚═╝╚═╝        ╚═╝   
 """
 
-TAGLINE = "Spec-Driven Development Toolkit"
+TAGLINE = "Hardware Spec-Driven Development Toolkit"
 class StepTracker:
     """Track and render hierarchical steps without emojis, similar to Claude Code tree output.
     Supports live auto-refresh via an attached refresh callback.
@@ -277,7 +277,7 @@ class BannerGroup(TyperGroup):
 
 app = typer.Typer(
     name="specify",
-    help="Setup tool for Specify spec-driven development projects",
+    help="Setup tool for Hardware Specify spec-driven development projects",
     add_completion=False,
     invoke_without_command=True,
     cls=BannerGroup,
@@ -389,8 +389,8 @@ def download_template_from_github(ai_assistant: str, download_dir: Path, *, verb
     """Download the latest template release from GitHub using HTTP requests.
     Returns (zip_path, metadata_dict)
     """
-    repo_owner = "github"
-    repo_name = "spec-kit"
+    repo_owner = "LeFrenchPOC"
+    repo_name = "hardware-spec-kit"
     
     if verbose:
         console.print("[cyan]Fetching latest release information...[/cyan]")
@@ -406,7 +406,7 @@ def download_template_from_github(ai_assistant: str, download_dir: Path, *, verb
         raise typer.Exit(1)
     
     # Find the template asset for the specified AI assistant
-    pattern = f"spec-kit-template-{ai_assistant}"
+    pattern = f"hardware-spec-kit-template-{ai_assistant}"
     matching_assets = [
         asset for asset in release_data.get("assets", [])
         if pattern in asset["name"] and asset["name"].endswith(".zip")
@@ -644,22 +644,22 @@ def init(
     here: bool = typer.Option(False, "--here", help="Initialize project in the current directory instead of creating a new one"),
 ):
     """
-    Initialize a new Specify project from the latest template.
+    Initialize a new Hardware Specify project from the latest template.
     
     This command will:
     1. Check that required tools are installed (git is optional)
     2. Let you choose your AI assistant (Claude Code, Gemini CLI, or GitHub Copilot)
-    3. Download the appropriate template from GitHub
+    3. Download the appropriate hardware template from GitHub
     4. Extract the template to a new project directory or current directory
     5. Initialize a fresh git repository (if not --no-git and no existing repo)
-    6. Optionally set up AI assistant commands
+    6. Optionally set up AI assistant commands for hardware development
     
     Examples:
-        specify init my-project
-        specify init my-project --ai claude
-        specify init my-project --ai gemini
-        specify init my-project --ai copilot --no-git
-        specify init --ignore-agent-tools my-project
+        specify init my-hardware-project
+        specify init my-hardware-project --ai claude
+        specify init my-hardware-project --ai gemini
+        specify init my-hardware-project --ai copilot --no-git
+        specify init --ignore-agent-tools my-hardware-project
         specify init --here --ai claude
         specify init --here
     """
@@ -699,8 +699,8 @@ def init(
             raise typer.Exit(1)
     
     console.print(Panel.fit(
-        "[bold cyan]Specify Project Setup[/bold cyan]\n"
-        f"{'Initializing in current directory:' if here else 'Creating new project:'} [green]{project_path.name}[/green]"
+        "[bold cyan]Hardware Specify Project Setup[/bold cyan]\n"
+        f"{'Initializing in current directory:' if here else 'Creating new hardware project:'} [green]{project_path.name}[/green]"
         + (f"\n[dim]Path: {project_path}[/dim]" if here else ""),
         border_style="cyan"
     ))
@@ -746,7 +746,7 @@ def init(
     
     # Download and set up project
     # New tree-based progress (no emojis); include earlier substeps
-    tracker = StepTracker("Initialize Specify Project")
+    tracker = StepTracker("Initialize Hardware Specify Project")
     # Flag to allow suppressing legacy headings
     sys._specify_tracker_active = True
     # Pre steps recorded as completed before live rendering
@@ -813,19 +813,22 @@ def init(
     if selected_ai == "claude":
         steps_lines.append(f"{step_num}. Open in Visual Studio Code and start using / commands with Claude Code")
         steps_lines.append("   - Type / in any file to see available commands")
-        steps_lines.append("   - Use /specify to create specifications")
-        steps_lines.append("   - Use /plan to create implementation plans")
-        steps_lines.append("   - Use /tasks to generate tasks")
+        steps_lines.append("   - Use /specify to create hardware specifications")
+        steps_lines.append("   - Use /plan to create hardware implementation plans")
+        steps_lines.append("   - Use /tasks to generate hardware development tasks")
     elif selected_ai == "gemini":
         steps_lines.append(f"{step_num}. Use / commands with Gemini CLI")
-        steps_lines.append("   - Run gemini /specify to create specifications")
-        steps_lines.append("   - Run gemini /plan to create implementation plans")
+        steps_lines.append("   - Run gemini /specify to create hardware specifications")
+        steps_lines.append("   - Run gemini /plan to create hardware implementation plans")
         steps_lines.append("   - See GEMINI.md for all available commands")
     elif selected_ai == "copilot":
         steps_lines.append(f"{step_num}. Open in Visual Studio Code and use [bold cyan]/specify[/], [bold cyan]/plan[/], [bold cyan]/tasks[/] commands with GitHub Copilot")
+        steps_lines.append("   - Focus on hardware product specifications and implementation")
 
     step_num += 1
-    steps_lines.append(f"{step_num}. Update [bold magenta]CONSTITUTION.md[/bold magenta] with your project's non-negotiable principles")
+    steps_lines.append(f"{step_num}. Update [bold magenta]CONSTITUTION.md[/bold magenta] with your hardware project's design principles")
+    steps_lines.append("   - Include mechanical, electrical, and embedded system constraints")
+    steps_lines.append("   - Define manufacturing and testing requirements")
 
     steps_panel = Panel("\n".join(steps_lines), title="Next steps", border_style="cyan", padding=(1,2))
     console.print()  # blank line
@@ -836,9 +839,9 @@ def init(
 
 @app.command()
 def check():
-    """Check that all required tools are installed."""
+    """Check that all required tools are installed for hardware development."""
     show_banner()
-    console.print("[bold]Checking Specify requirements...[/bold]\n")
+    console.print("[bold]Checking Hardware Specify requirements...[/bold]\n")
     
     # Check if we have internet connectivity by trying to reach GitHub API
     console.print("[cyan]Checking internet connectivity...[/cyan]")
@@ -852,15 +855,21 @@ def check():
     console.print("\n[cyan]Optional tools:[/cyan]")
     git_ok = check_tool("git", "https://git-scm.com/downloads")
     
+    console.print("\n[cyan]Hardware design tools (optional but recommended):[/cyan]")
+    fusion_ok = check_tool("fusion360", "Install from: https://www.autodesk.com/products/fusion-360")
+    kicad_ok = check_tool("kicad", "Install from: https://www.kicad.org/")
+    
     console.print("\n[cyan]Optional AI tools:[/cyan]")
     claude_ok = check_tool("claude", "Install from: https://docs.anthropic.com/en/docs/claude-code/setup")
     gemini_ok = check_tool("gemini", "Install from: https://github.com/google-gemini/gemini-cli")
     
-    console.print("\n[green]✓ Specify CLI is ready to use![/green]")
+    console.print("\n[green]✓ Hardware Specify CLI is ready to use![/green]")
     if not git_ok:
         console.print("[yellow]Consider installing git for repository management[/yellow]")
     if not (claude_ok or gemini_ok):
         console.print("[yellow]Consider installing an AI assistant for the best experience[/yellow]")
+    if not (fusion_ok or kicad_ok):
+        console.print("[yellow]Consider installing hardware design tools for full functionality[/yellow]")
 
 
 def main():

@@ -1,7 +1,7 @@
 [project]
-name = "specify-cli"
+name = "hardware-specify-cli"
 version = "0.0.2"
-description = "Setup tool for Specify spec-driven development projects"
+description = "Setup tool for Hardware Specify spec-driven development projects"
 requires-python = ">=3.11"
 dependencies = [
     "typer",
