@@ -51,7 +51,15 @@ import readchar
 AI_CHOICES = {
     "copilot": "GitHub Copilot",
     "claude": "Claude Code",
-    "gemini": "Gemini CLI"
+    "gemini": "Gemini CLI",
+    "cursor": "Cursor",
+    "qwen": "Qwen Code",
+    "opencode": "OpenCode",
+    "codex": "Codex CLI",
+    "windsurf": "Windsurf",
+    "kilocode": "Kilo Code",
+    "auggie": "Auggie CLI",
+    "roo": "Roo Code"
 }
 
 # ASCII Art Banner
@@ -797,17 +805,21 @@ def download_and_extract_template(project_path: Path, ai_assistant: str, is_curr
 @app.command()
 def init(
     project_name: str = typer.Argument(None, help="Name for your new project directory (optional if using --here)"),
-    ai_assistant: str = typer.Option(None, "--ai", help="AI assistant to use: claude, gemini, or copilot"),
+    ai_assistant: str = typer.Option(None, "--ai", help="AI assistant to use: claude, gemini, copilot, cursor, qwen, opencode, codex, windsurf, kilocode, auggie, or roo"),
+    script: str = typer.Option(None, "--script", help="Script variant to use: sh (bash/zsh) or ps (PowerShell)"),
     ignore_agent_tools: bool = typer.Option(False, "--ignore-agent-tools", help="Skip checks for AI agent tools like Claude Code"),
     no_git: bool = typer.Option(False, "--no-git", help="Skip git repository initialization"),
     here: bool = typer.Option(False, "--here", help="Initialize project in the current directory instead of creating a new one"),
+    skip_tls: bool = typer.Option(False, "--skip-tls", help="Skip SSL/TLS verification (not recommended)"),
+    debug: bool = typer.Option(False, "--debug", help="Enable detailed debug output for troubleshooting"),
+    github_token: str = typer.Option(None, "--github-token", help="GitHub token for API requests (or set GH_TOKEN/GITHUB_TOKEN env variable)"),
 ):
     """
     Initialize a new Hardware Specify project from the latest template.
     
     This command will:
     1. Check that required tools are installed (git is optional)
-    2. Let you choose your AI assistant (Claude Code, Gemini CLI, or GitHub Copilot)
+    2. Let you choose your AI assistant (Claude Code, Gemini CLI, GitHub Copilot, etc.)
     3. Download the appropriate hardware template from GitHub
     4. Extract the template to a new project directory or current directory
     5. Initialize a fresh git repository (if not --no-git and no existing repo)
@@ -816,11 +828,14 @@ def init(
     Examples:
         specify init my-hardware-project
         specify init my-hardware-project --ai claude
-        specify init my-hardware-project --ai gemini
-        specify init my-hardware-project --ai copilot --no-git
+        specify init my-hardware-project --ai cursor
+        specify init my-hardware-project --ai windsurf
+        specify init my-hardware-project --ai copilot --script ps
+        specify init my-hardware-project --ai gemini --no-git
         specify init --ignore-agent-tools my-hardware-project
         specify init --here --ai claude
-        specify init --here
+        specify init --here --debug
+        specify init my-hardware-project --github-token ghp_your_token_here
     """
     # Show banner first
     show_banner()
@@ -895,6 +910,38 @@ def init(
         elif selected_ai == "gemini":
             if not check_tool("gemini", "Install from: https://github.com/google-gemini/gemini-cli"):
                 console.print("[red]Error:[/red] Gemini CLI is required for Gemini projects")
+                agent_tool_missing = True
+        elif selected_ai == "cursor":
+            if not check_tool("cursor-agent", "Install from: https://cursor.sh/"):
+                console.print("[red]Error:[/red] Cursor CLI is required for Cursor projects")
+                agent_tool_missing = True
+        elif selected_ai == "qwen":
+            if not check_tool("qwen", "Install from: https://github.com/QwenLM/qwen-code"):
+                console.print("[red]Error:[/red] Qwen CLI is required for Qwen projects")
+                agent_tool_missing = True
+        elif selected_ai == "opencode":
+            if not check_tool("opencode", "Install from: https://opencode.ai/"):
+                console.print("[red]Error:[/red] OpenCode CLI is required for OpenCode projects")
+                agent_tool_missing = True
+        elif selected_ai == "codex":
+            if not check_tool("codex", "Install from: https://github.com/openai/codex"):
+                console.print("[red]Error:[/red] Codex CLI is required for Codex projects")
+                agent_tool_missing = True
+        elif selected_ai == "windsurf":
+            if not check_tool("windsurf", "Install from: https://windsurf.com/"):
+                console.print("[red]Error:[/red] Windsurf CLI is required for Windsurf projects")
+                agent_tool_missing = True
+        elif selected_ai == "kilocode":
+            if not check_tool("kilocode", "Install from: https://github.com/Kilo-Org/kilocode"):
+                console.print("[red]Error:[/red] Kilo Code CLI is required for Kilo Code projects")
+                agent_tool_missing = True
+        elif selected_ai == "auggie":
+            if not check_tool("auggie", "Install from: https://docs.augmentcode.com/cli/overview"):
+                console.print("[red]Error:[/red] Auggie CLI is required for Auggie projects")
+                agent_tool_missing = True
+        elif selected_ai == "roo":
+            if not check_tool("roo", "Install from: https://roocode.com/"):
+                console.print("[red]Error:[/red] Roo Code CLI is required for Roo Code projects")
                 agent_tool_missing = True
         # GitHub Copilot check is not needed as it's typically available in supported IDEs
         
@@ -998,7 +1045,7 @@ def init(
 
 @app.command()
 def check():
-    """Check that all required tools are installed for hardware development."""
+    """Check for installed tools (git, claude, gemini, code/code-insiders, cursor-agent, windsurf, qwen, opencode, codex) for hardware development."""
     show_banner()
     console.print("[bold]Checking Hardware Specify requirements...[/bold]\n")
     
@@ -1021,11 +1068,16 @@ def check():
     console.print("\n[cyan]Optional AI tools:[/cyan]")
     claude_ok = check_tool("claude", "Install from: https://docs.anthropic.com/en/docs/claude-code/setup")
     gemini_ok = check_tool("gemini", "Install from: https://github.com/google-gemini/gemini-cli")
+    cursor_ok = check_tool("cursor-agent", "Install from: https://cursor.sh/")
+    qwen_ok = check_tool("qwen", "Install from: https://github.com/QwenLM/qwen-code")
+    opencode_ok = check_tool("opencode", "Install from: https://opencode.ai/")
+    codex_ok = check_tool("codex", "Install from: https://github.com/openai/codex")
+    windsurf_ok = check_tool("windsurf", "Install from: https://windsurf.com/")
     
     console.print("\n[green]✓ Hardware Specify CLI is ready to use![/green]")
     if not git_ok:
         console.print("[yellow]Consider installing git for repository management[/yellow]")
-    if not (claude_ok or gemini_ok):
+    if not (claude_ok or gemini_ok or cursor_ok or qwen_ok or opencode_ok or codex_ok or windsurf_ok):
         console.print("[yellow]Consider installing an AI assistant for the best experience[/yellow]")
     if not (fusion_ok or kicad_ok):
         console.print("[yellow]Consider installing hardware design tools for full functionality[/yellow]")
