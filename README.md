@@ -14,8 +14,11 @@
 
 ## Table of Contents
 
-- [🤔 What is Spec-Driven Development?](#-what-is-spec-driven-development)
+- [🤔 What is Spec-Driven Hardware Development?](#-what-is-spec-driven-hardware-development)
 - [⚡ Get started](#-get-started)
+- [📽️ Video Overview](#️-video-overview)
+- [🤖 Supported AI Agents](#-supported-ai-agents)
+- [🔧 Specify CLI Reference](#-specify-cli-reference)
 - [📚 Core philosophy](#-core-philosophy)
 - [🌟 Development phases](#-development-phases)
 - [🎯 Experimental goals](#-experimental-goals)
@@ -42,27 +45,146 @@ Initialize your hardware project depending on the AI agent you're using:
 uvx --from git+https://github.com/LeFrenchPOC/hardware-spec-kit.git specify init <PROJECT_NAME>
 ```
 
-### 2. Create the hardware spec
+### 2. Establish project principles
 
-Use the `/specify` command to describe what you want to build. Focus on the **what** and **why**, not the implementation details.
+Use the **`/constitution`** command to create your project's governing principles and development guidelines that will guide all subsequent hardware development.
+
+```bash
+/constitution Create principles focused on design quality, testing standards, user experience consistency, manufacturing requirements, and safety considerations for hardware products
+```
+
+### 3. Create the hardware spec
+
+Use the **`/specify`** command to describe what you want to build. Focus on the **what** and **why**, not the implementation details.
 
 ```bash
 /specify Build a smart temperature monitoring device that can track environmental conditions in multiple rooms. The device should display real-time temperature and humidity on a local screen, log data over time, and send alerts when conditions exceed safe thresholds. The system should be battery-powered and communicate wirelessly with a central hub.
 ```
 
-### 3. Create a technical implementation plan
+### 4. Create a technical implementation plan
 
-Use the `/plan` command to provide your hardware platform and design choices.
+Use the **`/plan`** command to provide your hardware platform and design choices.
 
 ```bash
 /plan The device uses an ESP32 microcontroller with DHT22 sensors for temperature/humidity monitoring. Mechanical enclosure designed in Fusion360 for 3D printing. PCB layout in KiCAD with battery management and wireless communication. Central hub runs on Raspberry Pi with LoRa communication.
 ```
 
-### 4. Break down and implement
+### 5. Break down into tasks
 
-Use `/tasks` to create an actionable task list, then ask your agent to implement the feature.
+Use **`/tasks`** to create an actionable task list from your implementation plan.
+
+```bash
+/tasks
+```
+
+### 6. Execute implementation
+
+Use **`/implement`** to execute all tasks and build your hardware feature according to the plan.
+
+```bash
+/implement
+```
 
 For detailed step-by-step instructions, see our [comprehensive guide](./spec-driven.md).
+
+## 📽️ Video Overview
+
+Want to see Spec Kit in action? Watch our [video overview](https://www.youtube.com/watch?v=a9eR1xsfvHg&pp=0gcJCckJAYcqIYzv)!
+
+[![Spec Kit video header](/media/spec-kit-video-header.jpg)](https://www.youtube.com/watch?v=a9eR1xsfvHg&pp=0gcJCckJAYcqIYzv)
+
+## 🤖 Supported AI Agents
+
+| Agent                                                     | Support | Notes                                             |
+|-----------------------------------------------------------|---------|---------------------------------------------------|
+| [Claude Code](https://www.anthropic.com/claude-code)      | ✅ |                                                   |
+| [GitHub Copilot](https://code.visualstudio.com/)          | ✅ |                                                   |
+| [Gemini CLI](https://github.com/google-gemini/gemini-cli) | ✅ |                                                   |
+| [Cursor](https://cursor.sh/)                              | ✅ |                                                   |
+| [Qwen Code](https://github.com/QwenLM/qwen-code)          | ✅ |                                                   |
+| [opencode](https://opencode.ai/)                          | ✅ |                                                   |
+| [Windsurf](https://windsurf.com/)                         | ✅ |                                                   |
+| [Kilo Code](https://github.com/Kilo-Org/kilocode)         | ✅ |                                                   |
+| [Auggie CLI](https://docs.augmentcode.com/cli/overview)   | ✅ |                                                   |
+| [Roo Code](https://roocode.com/)                          | ✅ |                                                   |
+| [Codex CLI](https://github.com/openai/codex)              | ⚠️ | Codex [does not support](https://github.com/openai/codex/issues/2890) custom arguments for slash commands.  |
+
+## 🔧 Specify CLI Reference
+
+The `specify` command supports the following options:
+
+### Commands
+
+| Command     | Description                                                    |
+|-------------|----------------------------------------------------------------|
+| `init`      | Initialize a new Hardware Specify project from the latest template      |
+| `check`     | Check for installed tools (`git`, `claude`, `gemini`, `code`/`code-insiders`, `cursor-agent`, `windsurf`, `qwen`, `opencode`, `codex`) |
+
+### `specify init` Arguments & Options
+
+| Argument/Option        | Type     | Description                                                                  |
+|------------------------|----------|------------------------------------------------------------------------------|
+| `<project-name>`       | Argument | Name for your new project directory (optional if using `--here`)            |
+| `--ai`                 | Option   | AI assistant to use: `claude`, `gemini`, `copilot`, `cursor`, `qwen`, `opencode`, `codex`, `windsurf`, `kilocode`, `auggie`, or `roo` |
+| `--script`             | Option   | Script variant to use: `sh` (bash/zsh) or `ps` (PowerShell)                 |
+| `--ignore-agent-tools` | Flag     | Skip checks for AI agent tools like Claude Code                             |
+| `--no-git`             | Flag     | Skip git repository initialization                                          |
+| `--here`               | Flag     | Initialize project in the current directory instead of creating a new one   |
+| `--skip-tls`           | Flag     | Skip SSL/TLS verification (not recommended)                                 |
+| `--debug`              | Flag     | Enable detailed debug output for troubleshooting                            |
+| `--github-token`       | Option   | GitHub token for API requests (or set GH_TOKEN/GITHUB_TOKEN env variable)  |
+
+### Examples
+
+```bash
+# Basic hardware project initialization
+specify init my-hardware-project
+
+# Initialize with specific AI assistant
+specify init my-hardware-project --ai claude
+
+# Initialize with Cursor support
+specify init my-hardware-project --ai cursor
+
+# Initialize with Windsurf support
+specify init my-hardware-project --ai windsurf
+
+# Initialize with PowerShell scripts (Windows/cross-platform)
+specify init my-hardware-project --ai copilot --script ps
+
+# Initialize in current directory
+specify init --here --ai copilot
+
+# Skip git initialization
+specify init my-hardware-project --ai gemini --no-git
+
+# Enable debug output for troubleshooting
+specify init my-hardware-project --ai claude --debug
+
+# Use GitHub token for API requests (helpful for corporate environments)
+specify init my-hardware-project --ai claude --github-token ghp_your_token_here
+
+# Check system requirements
+specify check
+```
+
+### Available Slash Commands
+
+After running `specify init`, your AI coding agent will have access to these slash commands for structured hardware development:
+
+| Command         | Description                                                           |
+|-----------------|-----------------------------------------------------------------------|
+| `/constitution` | Create or update project governing principles and development guidelines |
+| `/specify`      | Define what hardware you want to build (requirements and user stories) |
+| `/plan`         | Create technical implementation plans with your chosen hardware platform |
+| `/tasks`        | Generate actionable task lists for implementation                     |
+| `/implement`    | Execute all tasks to build the hardware feature according to the plan |
+
+### Environment Variables
+
+| Variable         | Description                                                                                    |
+|------------------|------------------------------------------------------------------------------------------------|
+| `SPECIFY_FEATURE` | Override feature detection for non-Git repositories. Set to the feature directory name (e.g., `001-temperature-monitor`) to work on a specific feature when not using Git branches.<br/>**Must be set in the context of the agent you're working with prior to using `/plan` or follow-up commands. |
 
 ## 📚 Core philosophy
 
@@ -113,7 +235,7 @@ Our research and experimentation focus on:
 ## 🔧 Prerequisites
 
 - **Linux/macOS** (or WSL2 on Windows)
-- AI coding agent: [Claude Code](https://www.anthropic.com/claude-code), [GitHub Copilot](https://code.visualstudio.com/), or [Gemini CLI](https://github.com/google-gemini/gemini-cli)
+- AI coding agent: [Claude Code](https://www.anthropic.com/claude-code), [GitHub Copilot](https://code.visualstudio.com/), [Gemini CLI](https://github.com/google-gemini/gemini-cli), [Cursor](https://cursor.sh/), [Qwen CLI](https://github.com/QwenLM/qwen-code), [opencode](https://opencode.ai/), [Codex CLI](https://github.com/openai/codex), or [Windsurf](https://windsurf.com/)
 - [uv](https://docs.astral.sh/uv/) for package management
 - [Python 3.11+](https://www.python.org/downloads/)
 - [Git](https://git-scm.com/downloads)
@@ -121,6 +243,8 @@ Our research and experimentation focus on:
   - [Fusion360](https://www.autodesk.com/products/fusion-360) for mechanical design
   - [KiCAD](https://www.kicad.org/) for electrical design and PCB layout
   - Development boards and prototyping hardware as needed
+
+If you encounter issues with an agent, please open an issue so we can refine the integration.
 
 ## 📖 Learn more
 
@@ -154,25 +278,41 @@ You will be prompted to select the AI agent you are using. You can also proactiv
 specify init <project_name> --ai claude
 specify init <project_name> --ai gemini
 specify init <project_name> --ai copilot
+specify init <project_name> --ai cursor
+specify init <project_name> --ai qwen
+specify init <project_name> --ai opencode
+specify init <project_name> --ai codex
+specify init <project_name> --ai windsurf
 # Or in current directory:
 specify init --here --ai claude
+specify init --here --ai codex
 ```
 
-The CLI will check if you have Claude Code or Gemini CLI installed. If you do not, or you prefer to get the templates without checking for the right tools, use `--ignore-agent-tools` with your command:
+The CLI will check if you have Claude Code, Gemini CLI, Cursor CLI, Qwen CLI, opencode, or Codex CLI installed. If you do not, or you prefer to get the templates without checking for the right tools, use `--ignore-agent-tools` with your command:
 
 ```bash
 specify init <project_name> --ai claude --ignore-agent-tools
 ```
 
-### **STEP 1:** Bootstrap the project
+### **STEP 1:** Establish project principles
 
 Go to the project folder and run your AI agent. In our example, we're using `claude`.
 
 ![Bootstrapping Claude Code environment](./media/bootstrap-claude-code.gif)
 
-You will know that things are configured correctly if you see the `/specify`, `/plan`, and `/tasks` commands available.
+You will know that things are configured correctly if you see the `/constitution`, `/specify`, `/plan`, `/tasks`, and `/implement` commands available.
 
-The first step should be creating a new project scaffolding. Use `/specify` command and then provide the concrete requirements for the project you want to develop.
+The first step should be establishing your project's governing principles using the `/constitution` command. This helps ensure consistent decision-making throughout all subsequent development phases:
+
+```text
+/constitution Create principles focused on design quality, testing standards, user experience consistency, manufacturing requirements, and safety considerations for hardware products. Include governance for how these principles should guide technical decisions and implementation choices.
+```
+
+This step creates or updates the `/memory/constitution.md` file with your project's foundational guidelines that the AI agent will reference during specification, planning, and implementation phases.
+
+### **STEP 2:** Create project specifications
+
+With your project principles established, you can now create the functional specifications. Use the `/specify` command and then provide the concrete requirements for the hardware project you want to develop.
 
 >[!IMPORTANT]
 >Be as explicit as possible about _what_ you are trying to build and _why_. **Do not focus on the tech stack at this point**.
@@ -212,7 +352,7 @@ At this stage, your project folder contents should resemble the following:
     └── tasks-template.md
 ```
 
-### **STEP 2:** Functional specification clarification
+### **STEP 3:** Functional specification clarification
 
 With the baseline specification created, you can go ahead and clarify any of the requirements that were not captured properly within the first shot attempt. For example, you could use a prompt like this within the same Claude Code session:
 
@@ -228,7 +368,7 @@ Read the review and acceptance checklist, and check off each item in the checkli
 
 It's important to use the interaction with Claude Code as an opportunity to clarify and ask questions around the specification - **do not treat its first attempt as final**.
 
-### **STEP 3:** Generate a plan
+### **STEP 4:** Generate a plan
 
 You can now be specific about the hardware platform and other technical requirements. You can use the `/plan` command that is built into the project template with a prompt like this:
 
@@ -294,7 +434,7 @@ like power consumption calculations, antenna design requirements, or mechanical 
 >[!NOTE]
 >Claude Code might be over-eager and add components that you did not ask for. Ask it to clarify the rationale and the source of the change.
 
-### **STEP 4:** Have Claude Code validate the plan
+### **STEP 5:** Have Claude Code validate the plan
 
 With the plan in place, you should have Claude Code run through it to make sure that there are no missing pieces. You can use a prompt like this:
 
@@ -313,22 +453,29 @@ You can also ask Claude Code (if you have the [GitHub CLI](https://docs.github.c
 >[!NOTE]
 >Before you have the agent implement it, it's also worth prompting Claude Code to cross-check the details to see if there are any over-engineered pieces (remember - it can be over-eager). If over-engineered components or decisions exist, you can ask Claude Code to resolve them. Ensure that Claude Code follows the [constitution](base/memory/constitution.md) as the foundational piece that it must adhere to when establishing the plan.
 
-### STEP 5: Implementation
+### STEP 6: Implementation
 
-Once ready, instruct Claude Code to implement your hardware design (example path included):
+Once ready, use the `/implement` command to execute your implementation plan:
 
 ```text
-implement specs/001-create-tempsense/plan.md
+/implement
 ```
 
-Claude Code will spring into action and will start creating the implementation including:
+The `/implement` command will:
+- Validate that all prerequisites are in place (constitution, spec, plan, and tasks)
+- Parse the task breakdown from `tasks.md`
+- Execute tasks in the correct order, respecting dependencies and parallel execution markers
+- Follow the hardware design approach defined in your task plan
+- Provide progress updates and handle errors appropriately
+
+This will spring into action and start creating the implementation including:
 - Fusion360 mechanical design files for enclosures
 - KiCAD schematic and PCB layout files
 - Embedded firmware code for ESP32 microcontrollers
 - Configuration and deployment scripts
 
 >[!IMPORTANT]
->Claude Code will execute local CLI commands for design tool automation and firmware compilation - make sure you have the necessary tools installed on your machine.
+>The AI agent will execute local CLI commands for design tool automation and firmware compilation - make sure you have the necessary tools installed on your machine.
 
 Once the implementation step is done, ask Claude Code to try to validate the design and resolve any emerging issues. This includes checking mechanical fits, electrical compatibility, and firmware compilation. If there are design rule check (DRC) errors in KiCAD or assembly conflicts in Fusion360, copy and paste the error messages in Claude Code and have it attempt to resolve them.
 
