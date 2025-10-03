@@ -1,5 +1,7 @@
 # Hardware Spec Kit Constitution
 
+> Last updated: 2025-10-03
+
 ## Core Principles
 
 ### I. Design-First Principle
