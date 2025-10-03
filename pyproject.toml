@@ -6,9 +6,10 @@ requires-python = ">=3.11"
 dependencies = [
     "typer",
     "rich",
-    "httpx",
+    "httpx[socks]",
     "platformdirs",
     "readchar",
+    "truststore>=0.10.4",
 ]
 
 [project.scripts]

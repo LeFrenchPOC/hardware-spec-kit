@@ -28,9 +28,10 @@ import sys
 import zipfile
 import tempfile
 import shutil
+import shlex
 import json
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Tuple
 
 import typer
 import httpx
@@ -46,6 +47,20 @@ from typer.core import TyperGroup
 
 # For cross-platform keyboard input
 import readchar
+import ssl
+import truststore
+
+ssl_context = truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+client = httpx.Client(verify=ssl_context)
+
+def _github_token(cli_token: str | None = None) -> str | None:
+    """Return sanitized GitHub token (cli arg takes precedence) or None."""
+    return ((cli_token or os.getenv("GH_TOKEN") or os.getenv("GITHUB_TOKEN") or "").strip()) or None
+
+def _github_auth_headers(cli_token: str | None = None) -> dict:
+    """Return Authorization header dict only when a non-empty token exists."""
+    token = _github_token(cli_token)
+    return {"Authorization": f"Bearer {token}"} if token else {}
 
 # Constants
 AI_CHOICES = {
@@ -54,13 +69,19 @@ AI_CHOICES = {
     "gemini": "Gemini CLI",
     "cursor": "Cursor",
     "qwen": "Qwen Code",
-    "opencode": "OpenCode",
+    "opencode": "opencode",
     "codex": "Codex CLI",
     "windsurf": "Windsurf",
     "kilocode": "Kilo Code",
     "auggie": "Auggie CLI",
-    "roo": "Roo Code"
+    "roo": "Roo Code",
+    "q": "Amazon Q Developer CLI",
 }
+# Add script type choices
+SCRIPT_TYPE_CHOICES = {"sh": "POSIX Shell (bash/zsh)", "ps": "PowerShell"}
+
+# Claude CLI local installation path after migrate-installer
+CLAUDE_LOCAL_PATH = Path.home() / ".claude" / "local" / "claude"
 
 # ASCII Art Banner
 BANNER = """
@@ -393,20 +414,34 @@ def init_git_repo(project_path: Path, quiet: bool = False) -> bool:
         os.chdir(original_cwd)
 
 
-def download_template_from_github(ai_assistant: str, download_dir: Path, *, verbose: bool = True, show_progress: bool = True):
+def download_template_from_github(ai_assistant: str, download_dir: Path, *, script_type: str = "sh", verbose: bool = True, show_progress: bool = True, client: httpx.Client = None, debug: bool = False, github_token: str = None):
     """Download the latest template release from GitHub using HTTP requests.
     Returns (zip_path, metadata_dict)
     """
     repo_owner = "LeFrenchPOC"
     repo_name = "hardware-spec-kit"
+    if client is None:
+        client = httpx.Client(verify=ssl_context)
     
     if verbose:
         console.print("[cyan]Fetching latest release information...[/cyan]")
     api_url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases/latest"
     
     try:
-        response = httpx.get(api_url, timeout=30, follow_redirects=True)
-        response.raise_for_status()
+        response = client.get(
+            api_url,
+            timeout=30,
+            follow_redirects=True,
+            headers=_github_auth_headers(github_token),
+        )
+        status = response.status_code
+        if status != 200:
+            msg = f"GitHub API returned {status} for {api_url}"
+            if debug:
+                console.print(f"[red]{msg}[/red]")
+                console.print(f"[yellow]Response headers:[/yellow] {response.headers}")
+                console.print(f"[yellow]Response body:[/yellow] {response.text[:500]}")
+            raise RuntimeError(msg)
         release_data = response.json()
     except httpx.RequestError as e:
         if verbose:
@@ -445,8 +480,16 @@ def download_template_from_github(ai_assistant: str, download_dir: Path, *, verb
         console.print(f"[cyan]Downloading template...[/cyan]")
     
     try:
-        with httpx.stream("GET", download_url, timeout=30, follow_redirects=True) as response:
-            response.raise_for_status()
+        with client.stream(
+            "GET",
+            download_url,
+            timeout=60,
+            follow_redirects=True,
+            headers=_github_auth_headers(github_token),
+        ) as response:
+            if response.status_code != 200:
+                body_sample = response.text[:400]
+                raise RuntimeError(f"Download failed with {response.status_code}\nHeaders: {response.headers}\nBody (truncated): {body_sample}")
             total_size = int(response.headers.get('content-length', 0))
             
             with open(zip_path, 'wb') as f:
@@ -630,7 +673,7 @@ Capture specs first, then plans and tasks. Keep constraints visible and iterate 
         tracker.complete("local-template", "created")
 
 
-def download_and_extract_template(project_path: Path, ai_assistant: str, is_current_dir: bool = False, *, verbose: bool = True, tracker: StepTracker | None = None) -> Path:
+def download_and_extract_template(project_path: Path, ai_assistant: str, script_type: str, is_current_dir: bool = False, *, verbose: bool = True, tracker: StepTracker | None = None, client: httpx.Client = None, debug: bool = False, github_token: str = None) -> Path:
     """Download the latest release and extract it to create a new project.
     Returns project_path. Uses tracker if provided (with keys: fetch, download, extract, cleanup)
     """
@@ -644,8 +687,12 @@ def download_and_extract_template(project_path: Path, ai_assistant: str, is_curr
         zip_path, meta = download_template_from_github(
             ai_assistant,
             current_dir,
+            script_type=script_type,
             verbose=verbose and tracker is None,
-            show_progress=(tracker is None)
+            show_progress=(tracker is None),
+            client=client,
+            debug=debug,
+            github_token=github_token,
         )
         if tracker:
             tracker.complete("fetch", f"release {meta['release']} ({meta['size']:,} bytes)")
@@ -805,7 +852,7 @@ def download_and_extract_template(project_path: Path, ai_assistant: str, is_curr
 @app.command()
 def init(
     project_name: str = typer.Argument(None, help="Name for your new project directory (optional if using --here)"),
-    ai_assistant: str = typer.Option(None, "--ai", help="AI assistant to use: claude, gemini, copilot, cursor, qwen, opencode, codex, windsurf, kilocode, auggie, or roo"),
+    ai_assistant: str = typer.Option(None, "--ai", help="AI assistant to use: claude, gemini, copilot, cursor, qwen, opencode, codex, windsurf, kilocode, auggie, roo, or q"),
     script: str = typer.Option(None, "--script", help="Script variant to use: sh (bash/zsh) or ps (PowerShell)"),
     ignore_agent_tools: bool = typer.Option(False, "--ignore-agent-tools", help="Skip checks for AI agent tools like Claude Code"),
     no_git: bool = typer.Option(False, "--no-git", help="Skip git repository initialization"),
@@ -943,12 +990,29 @@ def init(
             if not check_tool("roo", "Install from: https://roocode.com/"):
                 console.print("[red]Error:[/red] Roo Code CLI is required for Roo Code projects")
                 agent_tool_missing = True
+        elif selected_ai == "q":
+            if not check_tool("q", "Install from: https://aws.amazon.com/q/developer/"):
+                console.print("[red]Error:[/red] Amazon Q Developer CLI is required for Amazon Q projects")
+                agent_tool_missing = True
         # GitHub Copilot check is not needed as it's typically available in supported IDEs
         
         if agent_tool_missing:
             console.print("\n[red]Required AI tool is missing![/red]")
             console.print("[yellow]Tip:[/yellow] Use --ignore-agent-tools to skip this check")
             raise typer.Exit(1)
+    
+    # Script type selection
+    if script:
+        if script not in SCRIPT_TYPE_CHOICES:
+            console.print(f"[red]Error:[/red] Invalid script type '{script}'. Choose from: {', '.join(SCRIPT_TYPE_CHOICES.keys())}")
+            raise typer.Exit(1)
+        selected_script = script
+    else:
+        # Default to sh for Unix-like systems, ps for Windows
+        if sys.platform == "win32":
+            selected_script = "ps"
+        else:
+            selected_script = "sh"
     
     # Download and set up project
     # New tree-based progress (no emojis); include earlier substeps
@@ -976,7 +1040,19 @@ def init(
     with Live(tracker.render(), console=console, refresh_per_second=8, transient=True) as live:
         tracker.attach_refresh(lambda: live.update(tracker.render()))
         try:
-            download_and_extract_template(project_path, selected_ai, here, verbose=False, tracker=tracker)
+            # Create HTTP client with appropriate SSL settings
+            http_client = None if not skip_tls else httpx.Client(verify=False)
+            download_and_extract_template(
+                project_path, 
+                selected_ai, 
+                selected_script, 
+                here, 
+                verbose=False, 
+                tracker=tracker,
+                client=http_client,
+                debug=debug,
+                github_token=github_token
+            )
 
             # Git step
             if not no_git:
@@ -1045,7 +1121,7 @@ def init(
 
 @app.command()
 def check():
-    """Check for installed tools (git, claude, gemini, code/code-insiders, cursor-agent, windsurf, qwen, opencode, codex) for hardware development."""
+    """Check for installed tools (git, claude, gemini, code/code-insiders, cursor-agent, windsurf, qwen, opencode, codex, q) for hardware development."""
     show_banner()
     console.print("[bold]Checking Hardware Specify requirements...[/bold]\n")
     
@@ -1073,11 +1149,12 @@ def check():
     opencode_ok = check_tool("opencode", "Install from: https://opencode.ai/")
     codex_ok = check_tool("codex", "Install from: https://github.com/openai/codex")
     windsurf_ok = check_tool("windsurf", "Install from: https://windsurf.com/")
+    q_ok = check_tool("q", "Install from: https://aws.amazon.com/q/developer/")
     
     console.print("\n[green]✓ Hardware Specify CLI is ready to use![/green]")
     if not git_ok:
         console.print("[yellow]Consider installing git for repository management[/yellow]")
-    if not (claude_ok or gemini_ok or cursor_ok or qwen_ok or opencode_ok or codex_ok or windsurf_ok):
+    if not (claude_ok or gemini_ok or cursor_ok or qwen_ok or opencode_ok or codex_ok or windsurf_ok or q_ok):
         console.print("[yellow]Consider installing an AI assistant for the best experience[/yellow]")
     if not (fusion_ok or kicad_ok):
         console.print("[yellow]Consider installing hardware design tools for full functionality[/yellow]")
