@@ -43,6 +43,25 @@ git push origin main
 
 ---
 
+## ⚠️ IMPORTANT: Workflow Won't Auto-Trigger!
+
+The workflow only triggers on changes to:
+- `memory/**`
+- `scripts/**`  
+- `templates/**`
+
+Since we changed `src/specify_cli/__init__.py`, you need to **manually trigger** it:
+
+```bash
+./scripts/trigger-workflow.sh
+```
+
+This will touch `memory/constitution.md` and push to trigger the workflow.
+
+**OR** manually trigger via GitHub UI:
+1. Go to: https://github.com/LeFrenchPOC/hardware-spec-kit/actions/workflows/release.yml
+2. Click "Run workflow" button
+
 ## 🎯 What Will Happen
 
 1. **Workflow runs** (~2-3 minutes)
